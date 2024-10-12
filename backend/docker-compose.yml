@@ -1,0 +1,6 @@
+﻿services:
+  tfa.forum.api:
+    image: tfa.forum.api
+    build:
+      context: .
+      dockerfile: src/TFA.Forum.API/Dockerfile
