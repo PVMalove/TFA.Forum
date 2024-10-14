@@ -13,10 +13,14 @@ public class Topic : IAuditable
     public User Author { get; set; }
     
     public Guid AuthorId { get; set; }
+
+    public Forum Forum { get; set; }
     
+    public Guid ForumId { get; set; }
+
     public ICollection<Comment> Comments { get; set; }
     
-    public DateTime CreateAt { get; set; }
+    public DateTimeOffset CreateAt { get; set; }
     
-    public DateTime? UpdateAt { get; set; }
+    public DateTimeOffset? UpdateAt { get; set; }
 }

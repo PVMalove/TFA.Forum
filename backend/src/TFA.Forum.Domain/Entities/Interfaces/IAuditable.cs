@@ -2,6 +2,6 @@
 
 public interface IAuditable
 {
-    DateTime CreateAt { get; set; }
-    DateTime? UpdateAt { get; set; }
+    DateTimeOffset CreateAt { get; set; }
+    DateTimeOffset? UpdateAt { get; set; }
 }

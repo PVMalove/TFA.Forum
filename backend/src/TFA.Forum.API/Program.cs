@@ -4,7 +4,6 @@ using TFA.Forum.API.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 IServiceCollection services = builder.Services;
 services.AddCustomServices(builder);
@@ -20,8 +19,9 @@ app.UseSwaggerUI(config =>
     foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions.Reverse())
     {
         config.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
-            $"Daily Planner swagger {description.GroupName.ToUpperInvariant()}");
+            $"Forum swagger {description.GroupName.ToUpperInvariant()}");
     }
 });
 
+app.MapControllers();
 app.Run();

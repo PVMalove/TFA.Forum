@@ -27,6 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\TFA.Forum.Application\TFA.Forum.Application.csproj" />
       <ProjectReference Include="..\TFA.Forum.Persistence\TFA.Forum.Persistence.csproj" />
     </ItemGroup>
 
