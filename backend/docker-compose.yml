@@ -1,16 +1,46 @@
-﻿services:
+﻿version: '3.9'
+
+networks:
+  default:
+    name: 'tfa'
+
+services:
   postgres:
-    container_name: postgres
-    image: postgres
+    container_name: 'tfa-postgres'
+    image: 'postgres:latest'
     restart: always
     environment:
       POSTGRES_DB: Malove.TFA.Forum
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - tfa-postgres:/var/lib/postgresql/data
+
+  opensearch:
+    container_name: 'tfa-os'
+    image: 'opensearchproject/opensearch:latest'
+    ports:
+      - '9200:9200'
+      - '9600:9600'
+    environment:
+      discovery.type: 'single-node'
+      DISABLE_SECURITY_PLUGIN: 'true'
+    volumes:
+      - tfa-logs:/usr/share/opensearch/data
   
+  opensearch-dashboards:
+    container_name: 'tfa-osd'
+    image: 'opensearchproject/opensearch-dashboards:latest'
+    ports:
+      - '5601:5601'
+    environment:
+      OPENSEARCH_HOSTS: '["http://tfa-os:9200"]'
+      DISABLE_SECURITY_DASHBOARDS_PLUGIN: 'true'
+    depends_on:
+      - opensearch
+    
 volumes:
-  postgres-data:
+  tfa-postgres:
+  tfa-logs:

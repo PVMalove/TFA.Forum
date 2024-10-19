@@ -1,4 +1,6 @@
 using Asp.Versioning.ApiExplorer;
+using Serilog;
+using Serilog.Filters;
 using TFA.Forum.API.Extensions;
 using TFA.Forum.API.Middlewares;
 
@@ -7,6 +9,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 
 IServiceCollection services = builder.Services;
+
+builder.Services.AddLogging(b => b.AddSerilog(new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .Enrich.WithProperty("Application", "TFA.Forum.API")
+    .Enrich.WithProperty("Environment", builder.Environment.EnvironmentName)
+    .WriteTo.Logger(lc => lc
+        .Filter.ByExcluding(Matching.FromSource("Microsoft"))
+        .WriteTo.OpenSearch(
+            builder.Configuration.GetConnectionString("Logs"),
+            "forum-logs-{0:yyyy.MM.dd}"))
+    .WriteTo.Logger(lc => lc.WriteTo.Console())
+    .CreateLogger()));
+
 services.AddCustomServices(builder);
 
 var app = builder.Build();

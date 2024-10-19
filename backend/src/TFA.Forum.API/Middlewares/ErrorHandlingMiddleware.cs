@@ -32,18 +32,11 @@ public class ErrorHandlingMiddleware
                 DomainException domainException =>
                     problemDetailsFactory.CreateFrom(context, domainException),
                 _ => problemDetailsFactory.CreateProblemDetails(context, StatusCodes.Status500InternalServerError,
-                    "Unhandled error! Please contact us.", detail: exception.Message),
+                    "Unhandled error! Please contact us.")
             };
 
             context.Response.StatusCode = problemDetails.Status ?? StatusCodes.Status500InternalServerError;
-            if (problemDetails is ValidationProblemDetails validationProblemDetails)
-            {
-                await context.Response.WriteAsJsonAsync(validationProblemDetails);
-            }
-            else
-            {
-                await context.Response.WriteAsJsonAsync(problemDetails);
-            }
+            await context.Response.WriteAsJsonAsync(problemDetails, problemDetails.GetType());
         }
     }
 }
