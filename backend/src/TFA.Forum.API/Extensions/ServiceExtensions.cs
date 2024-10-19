@@ -3,7 +3,6 @@ using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using TFA.Forum.API.Configurations;
 using TFA.Forum.Application;
-using TFA.Forum.Domain;
 using TFA.Forum.Persistence;
 
 namespace TFA.Forum.API.Extensions;

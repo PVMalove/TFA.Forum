@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
 using TFA.Domain;
 using TFA.Forum.Application.Authentication;
 using TFA.Forum.Application.Authorization;
@@ -25,6 +26,8 @@ public static class Inject
         
         services.AddScoped<IGuidFactory, GuidFactory>();
         services.AddScoped<IMomentProvider, MomentProvider>();
+
+        services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
         
         return services;
     }

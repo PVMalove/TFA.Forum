@@ -1,5 +1,6 @@
 using Asp.Versioning.ApiExplorer;
 using TFA.Forum.API.Extensions;
+using TFA.Forum.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,5 +24,9 @@ app.UseSwaggerUI(config =>
     }
 });
 
+app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseCors(x=> x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+app.UseHttpsRedirection();
+app.UseRouting();
 app.MapControllers();
 app.Run();

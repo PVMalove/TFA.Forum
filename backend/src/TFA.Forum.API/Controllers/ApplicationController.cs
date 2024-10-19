@@ -3,6 +3,5 @@
 namespace TFA.Forum.API.Controllers;
 
 [ApiController]
-//[Route("api/v{version:apiVersion}/[controller]")]
-[Route("[controller]")]
+[Route("api/v{version:apiVersion}/[controller]")]
 public abstract class ApplicationController : ControllerBase {}

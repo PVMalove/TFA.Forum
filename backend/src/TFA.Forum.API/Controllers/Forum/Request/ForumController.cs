@@ -1,43 +1,31 @@
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
-using TFA.Forum.Application.Authorization;
 using TFA.Forum.Application.Queries.CreateTopic;
 using TFA.Forum.Application.Queries.GetAllForums;
-using TFA.Forum.Domain.Entities;
-using TFA.Forum.Domain.Exceptions;
 
 namespace TFA.Forum.API.Controllers.Forum.Request;
 
-
-public class TopicController : ApplicationController
+[ApiVersion("1.0")]
+public class ForumController : ApplicationController
 {
     [HttpPost("{forumId:guid}/topics")]
+    [ProducesResponseType(400)]
     [ProducesResponseType(403)]
     [ProducesResponseType(410)]
     [ProducesResponseType(201, Type = typeof(CreateTopicRequest))]
     public async Task<IActionResult> CreateTopic(
-        Guid forumId,
+        [FromRoute] Guid forumId,
         [FromBody] CreateTopicRequest request,
         [FromServices] ICreateTopicUseCase useCase,
         CancellationToken cancellationToken)
     {
-        try
+        var query = new CreateTopicQuery(forumId, request.Title, request.Content);
+        var topic = await useCase.Execute(query, cancellationToken);
+        return CreatedAtRoute(nameof(GetForums),new CreateTopicRequest
         {
-            var topic = await useCase.Execute(forumId, request.Title, request.Content, cancellationToken);
-            return CreatedAtRoute(nameof(GetForums),new CreateTopicRequest
-            {
-                Title = topic.Title,
-                Content = topic.Content,
-            });
-        }
-        catch (Exception exception)
-        {
-            return exception switch
-            {
-                IntentionManagerException => Forbid(),
-                ForumNotFoundException => StatusCode(StatusCodes.Status410Gone),
-                _ => StatusCode(StatusCodes.Status500InternalServerError)
-            };
-        }
+            Title = topic.Title,
+            Content = topic.Content,
+        });
     }
     
     [HttpGet("GetForums")]

@@ -1,4 +1,6 @@
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Moq;
 using Moq.Language.Flow;
 using TFA.Forum.Application.Authentication;
@@ -13,7 +15,7 @@ namespace TFA.Forum.Domain.UnitTests;
 
 public class CreateTopicShould
 {
-    private readonly ICreateTopicUseCase createTopicUseCase;
+    private readonly ICreateTopicUseCase sut;
     private readonly Mock<ICreateTopicStorage> storage;
     private readonly ISetup<ICreateTopicStorage, Task<bool>> forumExistsSetup;
     private readonly ISetup<ICreateTopicStorage, Task<Topic>> createTopicSetup;
@@ -35,7 +37,11 @@ public class CreateTopicShould
         Mock<IIntentionManager> intentionManager = new();
         intentionIsAllowedSetup = intentionManager.Setup(m => m.IsAllowed(It.IsAny<TopicIntention>()));
         
-        createTopicUseCase = new CreateTopicUseCase(intentionManager.Object, identityProvider.Object, storage.Object);
+        var validator = new Mock<IValidator<CreateTopicQuery>>();
+        validator.Setup(v => v.ValidateAsync(It.IsAny<CreateTopicQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ValidationResult());
+        
+        sut = new CreateTopicUseCase(validator.Object, intentionManager.Object, identityProvider.Object, storage.Object);
     }
 
     [Fact]
@@ -46,7 +52,7 @@ public class CreateTopicShould
         intentionIsAllowedSetup.Returns(true);
         forumExistsSetup.ReturnsAsync(false);
 
-        await createTopicUseCase.Invoking(s => s.Execute(forumId, "Some title","Some content", CancellationToken.None))
+        await sut.Invoking(s => s.Execute(new CreateTopicQuery(forumId, "Some title","Some content"), CancellationToken.None))
             .Should().ThrowAsync<ForumNotFoundException>();
         storage.Verify(s => s.ForumExists(forumId, It.IsAny<CancellationToken>()));
     }
@@ -63,9 +69,9 @@ public class CreateTopicShould
         var expected = new Topic();
         createTopicSetup.ReturnsAsync(expected);
 
-        var actual = await createTopicUseCase.Execute(forumId, "Hello world","Some content", CancellationToken.None);
+        var actual = await sut.Execute(new CreateTopicQuery(forumId, "Some title","Some content"), CancellationToken.None);
         actual.Should().Be(expected);
 
-        storage.Verify(s => s.CreateTopic(forumId, userId, "Hello world","Some content", It.IsAny<CancellationToken>()), Times.Once);
+        storage.Verify(s => s.CreateTopic(forumId, userId, "Some title","Some content", It.IsAny<CancellationToken>()), Times.Once);
     }
 }
