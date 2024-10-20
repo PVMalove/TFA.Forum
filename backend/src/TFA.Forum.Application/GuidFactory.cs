@@ -1,9 +1,4 @@
-﻿namespace TFA.Domain;
-
-public interface IGuidFactory
-{
-    Guid Create();
-}
+namespace TFA.Forum.Domain;
 
 public class GuidFactory : IGuidFactory
 {

@@ -5,7 +5,7 @@ using Moq;
 using Moq.Language.Flow;
 using TFA.Forum.Application.Authentication;
 using TFA.Forum.Application.Authorization;
-using TFA.Forum.Application.Queries.CreateTopic;
+using TFA.Forum.Application.Commands.CreateTopic;
 using TFA.Forum.Application.Storage.Topic;
 using TFA.Forum.Domain.Entities;
 using TFA.Forum.Domain.Exceptions;
@@ -37,8 +37,8 @@ public class CreateTopicShould
         Mock<IIntentionManager> intentionManager = new();
         intentionIsAllowedSetup = intentionManager.Setup(m => m.IsAllowed(It.IsAny<TopicIntention>()));
         
-        var validator = new Mock<IValidator<CreateTopicQuery>>();
-        validator.Setup(v => v.ValidateAsync(It.IsAny<CreateTopicQuery>(), It.IsAny<CancellationToken>()))
+        var validator = new Mock<IValidator<CreateTopicCommand>>();
+        validator.Setup(v => v.ValidateAsync(It.IsAny<CreateTopicCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());
         
         sut = new CreateTopicUseCase(validator.Object, intentionManager.Object, identityProvider.Object, storage.Object);
@@ -52,7 +52,7 @@ public class CreateTopicShould
         intentionIsAllowedSetup.Returns(true);
         forumExistsSetup.ReturnsAsync(false);
 
-        await sut.Invoking(s => s.Execute(new CreateTopicQuery(forumId, "Some title","Some content"), CancellationToken.None))
+        await sut.Invoking(s => s.Execute(new CreateTopicCommand(forumId, "Some title","Some content"), CancellationToken.None))
             .Should().ThrowAsync<ForumNotFoundException>();
         storage.Verify(s => s.ForumExists(forumId, It.IsAny<CancellationToken>()));
     }
@@ -69,7 +69,7 @@ public class CreateTopicShould
         var expected = new Topic();
         createTopicSetup.ReturnsAsync(expected);
 
-        var actual = await sut.Execute(new CreateTopicQuery(forumId, "Some title","Some content"), CancellationToken.None);
+        var actual = await sut.Execute(new CreateTopicCommand(forumId, "Some title","Some content"), CancellationToken.None);
         actual.Should().Be(expected);
 
         storage.Verify(s => s.CreateTopic(forumId, userId, "Some title","Some content", It.IsAny<CancellationToken>()), Times.Once);

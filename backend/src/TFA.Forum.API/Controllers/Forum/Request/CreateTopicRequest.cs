@@ -1,7 +1,9 @@
-﻿namespace TFA.Forum.API.Controllers.Forum.Request;
+﻿using TFA.Forum.Application.Commands.CreateTopic;
 
-public class CreateTopicRequest
+namespace TFA.Forum.API.Controllers.Forum.Request;
+
+public record CreateTopicRequest(string? Title, string? Content)
 {
-    public string? Title { get; init; }
-    public string? Content { get; init; }
+    public CreateTopicCommand ToCommand(Guid ForumId)
+        => new(ForumId, Title, Content);
 }

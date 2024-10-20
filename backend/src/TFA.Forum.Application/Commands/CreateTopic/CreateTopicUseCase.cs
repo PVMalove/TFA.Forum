@@ -5,17 +5,17 @@ using TFA.Forum.Application.Storage.Topic;
 using TFA.Forum.Domain.Entities;
 using TFA.Forum.Domain.Exceptions;
 
-namespace TFA.Forum.Application.Queries.CreateTopic;
+namespace TFA.Forum.Application.Commands.CreateTopic;
 
 public class CreateTopicUseCase : ICreateTopicUseCase
 {
-    private readonly IValidator<CreateTopicQuery> validator;
+    private readonly IValidator<CreateTopicCommand> validator;
     private readonly IIntentionManager intentionManager;
     private readonly IIdentityProvider identityProvider;
     private readonly ICreateTopicStorage storage;
 
     public CreateTopicUseCase(
-        IValidator<CreateTopicQuery> validator,
+        IValidator<CreateTopicCommand> validator,
         IIntentionManager intentionManager,
         IIdentityProvider identityProvider,
         ICreateTopicStorage storage)
@@ -26,19 +26,19 @@ public class CreateTopicUseCase : ICreateTopicUseCase
         this.storage = storage;
     }
 
-    public async Task<Topic> Execute(CreateTopicQuery query,
+    public async Task<Topic> Execute(CreateTopicCommand command,
         CancellationToken cancellationToken)
     {
-        await validator.ValidateAndThrowAsync(query, cancellationToken);
+        await validator.ValidateAndThrowAsync(command, cancellationToken);
         
         intentionManager.ThrowIfForbidden(TopicIntention.Create);
 
-        var forumExists = await storage.ForumExists(query.ForumId, cancellationToken);
+        var forumExists = await storage.ForumExists(command.ForumId, cancellationToken);
         if (!forumExists)
         {
-            throw new ForumNotFoundException(query.ForumId);
+            throw new ForumNotFoundException(command.ForumId);
         }
 
-        return await storage.CreateTopic(query.ForumId, identityProvider.Current.UserId, query.Title, query.Content, cancellationToken);
+        return await storage.CreateTopic(command.ForumId, identityProvider.Current.UserId, command.Title, command.Content, cancellationToken);
     }
 }

@@ -1,9 +1,4 @@
-﻿namespace TFA.Domain;
-
-public interface IMomentProvider
-{
-    DateTimeOffset Now { get; }
-}
+namespace TFA.Forum.Domain;
 
 public class MomentProvider : IMomentProvider
 {

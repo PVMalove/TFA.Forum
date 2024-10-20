@@ -14,8 +14,9 @@ public class ErrorHandlingMiddleware
     {
         this.next = next;
     }
-    
-    public async Task Invoke(HttpContext context, ProblemDetailsFactory problemDetailsFactory)
+
+    public async Task Invoke(HttpContext context, ProblemDetailsFactory problemDetailsFactory,
+        ILogger<ErrorHandlingMiddleware> logger)
     {
         try
         {
@@ -23,17 +24,29 @@ public class ErrorHandlingMiddleware
         }
         catch (Exception exception)
         {
-            var problemDetails = exception switch
+            logger.LogError(exception, "Error has happened with {RequestPath}, the message is {ErrorMessage}",
+                context.Request.Path.Value, exception.Message);
+
+            ProblemDetails problemDetails;
+            switch (exception)
             {
-                IntentionManagerException intentionManagerException =>
-                    problemDetailsFactory.CreateFrom(context, intentionManagerException),
-                ValidationException validationException =>
-                    problemDetailsFactory.CreateFrom(context, validationException),
-                DomainException domainException =>
-                    problemDetailsFactory.CreateFrom(context, domainException),
-                _ => problemDetailsFactory.CreateProblemDetails(context, StatusCodes.Status500InternalServerError,
-                    "Unhandled error! Please contact us.")
-            };
+                case IntentionManagerException intentionManagerException:
+                    problemDetails = problemDetailsFactory.CreateFrom(context, intentionManagerException);
+                    break;
+                case ValidationException validationException:
+                    problemDetails = problemDetailsFactory.CreateFrom(context, validationException);
+                    logger.LogInformation(validationException, "Somebody sent invalid request, oops");
+                    break;
+                case DomainException domainException:
+                    problemDetails = problemDetailsFactory.CreateFrom(context, domainException);
+                    logger.LogError(domainException, "Domain exception occured");
+                    break;
+                default:
+                    problemDetails = problemDetailsFactory.CreateProblemDetails(context,
+                        StatusCodes.Status500InternalServerError, "unhandled error! Please contact us.");
+                    logger.LogError(exception, "Unhandled exception occured");
+                    break;
+            }
 
             context.Response.StatusCode = problemDetails.Status ?? StatusCodes.Status500InternalServerError;
             await context.Response.WriteAsJsonAsync(problemDetails, problemDetails.GetType());

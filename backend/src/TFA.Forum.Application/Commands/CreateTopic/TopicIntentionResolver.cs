@@ -1,7 +1,7 @@
 ﻿using TFA.Forum.Application.Authentication;
 using TFA.Forum.Application.Authorization;
 
-namespace TFA.Forum.Application.Queries.CreateTopic;
+namespace TFA.Forum.Application.Commands.CreateTopic;
 
 public class TopicIntentionResolver : IIntentionResolver<TopicIntention>
 {

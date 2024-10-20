@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using TFA.Domain;
 using TFA.Forum.Application.Authentication;
 using TFA.Forum.Application.Authorization;
-using TFA.Forum.Application.Queries.CreateTopic;
+using TFA.Forum.Application.Commands.CreateTopic;
 using TFA.Forum.Application.Queries.GetAllForums;
 using TFA.Forum.Application.Storage.Forum;
 using TFA.Forum.Application.Storage.Topic;
+using TFA.Forum.Domain;
 
 namespace TFA.Forum.Application;
 

@@ -39,9 +39,7 @@ app.UseSwaggerUI(config =>
     }
 });
 
-app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseCors(x=> x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-app.UseHttpsRedirection();
-app.UseRouting();
 app.MapControllers();
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.Run();

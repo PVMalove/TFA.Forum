@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 
-namespace TFA.Forum.Application.Queries.CreateTopic;
+namespace TFA.Forum.Application.Commands.CreateTopic;
 
-public class CreateTopicValidator : AbstractValidator<CreateTopicQuery>
+public class CreateTopicValidator : AbstractValidator<CreateTopicCommand>
 {
     public CreateTopicValidator()
     {
