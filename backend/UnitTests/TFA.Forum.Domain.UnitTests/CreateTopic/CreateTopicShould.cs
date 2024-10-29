@@ -10,8 +10,7 @@ using TFA.Forum.Application.Storage.Topic;
 using TFA.Forum.Domain.Entities;
 using TFA.Forum.Domain.Exceptions;
 
-
-namespace TFA.Forum.Domain.UnitTests;
+namespace TFA.Forum.Domain.UnitTests.CreateTopic;
 
 public class CreateTopicShould
 {

@@ -1,4 +1,4 @@
-﻿namespace TFA.Forum.Domain;
+﻿namespace TFA.Forum.Domain.Interfaces;
 
 public interface IGuidFactory
 {

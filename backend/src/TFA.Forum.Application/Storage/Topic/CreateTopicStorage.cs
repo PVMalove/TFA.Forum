@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TFA.Forum.Domain;
+using TFA.Forum.Domain.Interfaces;
 using TFA.Forum.Domain.Interfaces.Repository;
 
 namespace TFA.Forum.Application.Storage.Topic;

@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using TFA.Forum.Application.Commands.CreateTopic;
 
-namespace TFA.Forum.Domain.UnitTests;
+namespace TFA.Forum.Domain.UnitTests.CreateTopic;
 
 public class CreateTopicValidatorShould
 {

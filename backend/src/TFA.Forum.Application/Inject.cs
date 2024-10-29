@@ -7,6 +7,7 @@ using TFA.Forum.Application.Queries.GetAllForums;
 using TFA.Forum.Application.Storage.Forum;
 using TFA.Forum.Application.Storage.Topic;
 using TFA.Forum.Domain;
+using TFA.Forum.Domain.Interfaces;
 
 namespace TFA.Forum.Application;
 
