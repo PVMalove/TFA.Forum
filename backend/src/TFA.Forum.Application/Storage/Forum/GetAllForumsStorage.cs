@@ -14,12 +14,6 @@ public class GetAllForumsStorage : IGetAllForumsStorage
 
     public async Task<IEnumerable<Domain.Entities.Forum>> GetForums(CancellationToken cancellationToken)
     {
-        return await forumRepository.GetAll()
-            .Select(f => new Domain.Entities.Forum
-            {
-                Id = f.Id,
-                Title = f.Title
-            })
-            .ToArrayAsync(cancellationToken);
+        return await forumRepository.GetAll().ToArrayAsync(cancellationToken);
     }
 }

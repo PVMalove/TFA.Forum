@@ -7,7 +7,7 @@ using TFA.Forum.Domain.Entities;
 namespace TFA.Forum.Application.Queries.GetTopics;
 
 
-public class GetTopicsUseCase : IGetForumsUseCase
+public class GetTopicsUseCase : IGetTopicsUseCase
 {
     private readonly IValidator<GetTopicsQuery> validator;
     private readonly IGetAllForumsStorage getForumsStorage;

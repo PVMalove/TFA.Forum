@@ -18,14 +18,8 @@ internal class GetTopicsStorage : IGetTopicsStorage
         var query = topicRepository.GetAll().Where(t => t.ForumId == forumId);
         var totalCount = await query.CountAsync(cancellationToken);
 
-        var resources = await query.Select(t => new Domain.Entities.Topic
-            {
-                Id = t.Id,
-                ForumId = t.ForumId,
-                AuthorId = t.AuthorId,
-                Title = t.Title,
-                CreateAt = t.CreateAt
-            })
+        var resources = await query
+            .AsNoTracking()
             .Skip(skip)
             .Take(take)
             .ToArrayAsync(cancellationToken);

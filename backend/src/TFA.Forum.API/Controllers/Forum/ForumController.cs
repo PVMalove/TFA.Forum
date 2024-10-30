@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using TFA.Forum.API.Controllers.Forum.Request;
 using TFA.Forum.Application.Commands.CreateTopic;
 using TFA.Forum.Application.Queries.GetAllForums;
+using TFA.Forum.Application.Queries.GetTopics;
+using TFA.Forum.Domain.Entities;
 
 namespace TFA.Forum.API.Controllers.Forum;
 
@@ -36,5 +38,19 @@ public class ForumController : ApplicationController
     {
         var topic = await useCase.Execute(request.ToCommand(forumId), cancellationToken);
         return CreatedAtRoute(nameof(GetForums), new CreateTopicRequest(topic.Title, topic.Content));
+    }
+    
+    [HttpGet("{forumId:guid}/topics")]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(410)]
+    [ProducesResponseType(200)]
+    public async Task<IActionResult> GetTopics(
+        Guid forumId,
+        [FromQuery] GetTopicRequest request,
+        [FromServices] IGetTopicsUseCase useCase,
+        CancellationToken cancellationToken)
+    {
+        var (resources, totalCount) = await useCase.Execute(request.ToQuery(forumId), cancellationToken);
+        return Ok(new { resources = resources.Select(t => new CreateTopicRequest(t.Title, t.Content)), totalCount });
     }
 }

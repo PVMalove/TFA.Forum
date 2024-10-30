@@ -41,16 +41,8 @@ public class CreateTopicStorage: ICreateTopicStorage
         await topicRepository.SaveChangesAsync(cancellationToken);
 
         return await topicRepository.GetAll()
+            .AsNoTracking()
             .Where(t => t.Id == topicId)
-            .Select(t => new Domain.Entities.Topic
-            {
-                Id = t.Id,
-                ForumId = t.ForumId,
-                AuthorId = t.AuthorId,
-                Title = t.Title,
-                Content = t.Content,
-                CreateAt = t.CreateAt
-            })
             .FirstAsync(cancellationToken);
     }
 }
