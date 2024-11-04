@@ -31,7 +31,7 @@ public class ForumController : ApplicationController
     [ProducesResponseType(410)]
     [ProducesResponseType(201, Type = typeof(CreateTopicRequest))]
     public async Task<IActionResult> CreateTopic(
-        Guid forumId,
+        [FromRoute] Guid forumId,
         [FromBody] CreateTopicRequest request,
         [FromServices] ICreateTopicUseCase useCase,
         CancellationToken cancellationToken)
@@ -45,7 +45,7 @@ public class ForumController : ApplicationController
     [ProducesResponseType(410)]
     [ProducesResponseType(200)]
     public async Task<IActionResult> GetTopics(
-        Guid forumId,
+        [FromRoute] Guid forumId,
         [FromQuery] GetTopicRequest request,
         [FromServices] IGetTopicsUseCase useCase,
         CancellationToken cancellationToken)

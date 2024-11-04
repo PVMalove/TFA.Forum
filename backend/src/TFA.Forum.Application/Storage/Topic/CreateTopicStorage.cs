@@ -20,9 +20,6 @@ public class CreateTopicStorage: ICreateTopicStorage
         this.momentProvider = momentProvider;
     }
 
-    public Task<bool> ForumExists(Guid forumId, CancellationToken cancellationToken) =>
-        forumRepository.GetAll().AnyAsync(f => f.Id == forumId, cancellationToken);
-
     public async Task<Domain.Entities.Topic> CreateTopic(Guid forumId, Guid AuthorId, string? title,
         string? content, CancellationToken cancellationToken)
     {

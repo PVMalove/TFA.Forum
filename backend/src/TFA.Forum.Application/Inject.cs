@@ -33,6 +33,8 @@ public static class Inject
 
         services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
         
+        services.AddMemoryCache();
+        
         return services;
     }
 }

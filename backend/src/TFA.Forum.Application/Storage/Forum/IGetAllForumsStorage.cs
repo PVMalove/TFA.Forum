@@ -2,5 +2,5 @@
 
 public interface IGetAllForumsStorage
 {
-    Task<IEnumerable<Domain.Entities.Forum>> GetForums(CancellationToken cancellationToken);
+    Task<IEnumerable<Domain.Entities.Forum>?> GetForums(CancellationToken cancellationToken);
 }

@@ -2,5 +2,5 @@
 
 public interface IGetAllForumsUseCase
 {
-    Task<IEnumerable<Domain.Entities.Forum>> Execute(CancellationToken cancellationToken);
+    Task<IEnumerable<Domain.Entities.Forum>?> Execute(CancellationToken cancellationToken);
 }
