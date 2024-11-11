@@ -1,17 +1,18 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using TFA.Forum.API.Controllers.Forum.Request;
+using TFA.Forum.Application.Commands.CreateForum;
 using TFA.Forum.Application.Commands.CreateTopic;
 using TFA.Forum.Application.Queries.GetAllForums;
 using TFA.Forum.Application.Queries.GetTopics;
-using TFA.Forum.Domain.Entities;
+
 
 namespace TFA.Forum.API.Controllers.Forum;
 
 [ApiVersion("1.0")]
 public class ForumController : ApplicationController
 {
-    [HttpGet(Name = nameof(GetForums))]
+    [HttpGet(Name = "all_forums")]
     [ProducesResponseType(200, Type = typeof(GetAllForumRequest[]))]
     public async Task<IActionResult> GetForums(
         [FromServices] IGetAllForumsUseCase useCase,
@@ -25,7 +26,20 @@ public class ForumController : ApplicationController
         }));
     }
     
-    [HttpPost("{forumId:guid}/topics")]
+    [HttpPost("create_forum")]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(410)]
+    [ProducesResponseType(201, Type = typeof(CreateTopicRequest))]
+    public async Task<IActionResult> CreateForum(
+        [FromBody] CreateForumRequest request,
+        [FromServices] ICreateForumUseCase useCase,
+        CancellationToken cancellationToken)
+    {
+        var forum = await useCase.Execute(request.ToCommand(), cancellationToken);
+        return CreatedAtRoute("all_forums", new CreateForumRequest(forum.Title));
+    }
+    
+    [HttpPost("{forumId:guid}/topic")]
     [ProducesResponseType(400)]
     [ProducesResponseType(403)]
     [ProducesResponseType(410)]
@@ -37,7 +51,7 @@ public class ForumController : ApplicationController
         CancellationToken cancellationToken)
     {
         var topic = await useCase.Execute(request.ToCommand(forumId), cancellationToken);
-        return CreatedAtRoute(nameof(GetForums), new CreateTopicRequest(topic.Title, topic.Content));
+        return CreatedAtRoute("all_forums", new CreateTopicRequest(topic.Title, topic.Content));
     }
     
     [HttpGet("{forumId:guid}/topics")]

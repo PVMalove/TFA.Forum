@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using TFA.Domain.Exceptions;
+using TFA.Forum.Domain.Exceptions;
 
 namespace TFA.Forum.Application.Queries.GetTopics;
 

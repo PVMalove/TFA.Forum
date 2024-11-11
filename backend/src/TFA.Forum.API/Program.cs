@@ -43,3 +43,8 @@ app.UseCors(x=> x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 app.MapControllers();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.Run();
+
+namespace TFA.Forum.API
+{
+    public partial class Program { }
+}
