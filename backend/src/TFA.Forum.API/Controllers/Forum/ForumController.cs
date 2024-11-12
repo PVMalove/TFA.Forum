@@ -19,11 +19,7 @@ public class ForumController : ApplicationController
         CancellationToken cancellationToken)
     {
         var forums = await useCase.Execute(cancellationToken);
-        return Ok(forums.Select(f => new GetAllForumRequest
-        {
-            Id = f.Id,
-            Title = f.Title
-        }));
+        return Ok(forums?.Select(f => new GetAllForumRequest(f.Id, f.Title)));
     }
     
     [HttpPost("create_forum")]
@@ -39,6 +35,20 @@ public class ForumController : ApplicationController
         return CreatedAtRoute("all_forums", new CreateForumRequest(forum.Title));
     }
     
+    [HttpGet("{forumId:guid}/topics")]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(410)]
+    [ProducesResponseType(200)]
+    public async Task<IActionResult> GetTopics(
+        [FromRoute] Guid forumId,
+        [FromQuery] GetTopicRequest request,
+        [FromServices] IGetTopicsUseCase useCase,
+        CancellationToken cancellationToken)
+    {
+        var (resources, totalCount) = await useCase.Execute(request.ToQuery(forumId), cancellationToken);
+        return Ok(new { resources = resources.Select(t => new CreateTopicRequest(t.Title, t.Content)), totalCount });
+    }
+
     [HttpPost("{forumId:guid}/topic")]
     [ProducesResponseType(400)]
     [ProducesResponseType(403)]
@@ -52,19 +62,5 @@ public class ForumController : ApplicationController
     {
         var topic = await useCase.Execute(request.ToCommand(forumId), cancellationToken);
         return CreatedAtRoute("all_forums", new CreateTopicRequest(topic.Title, topic.Content));
-    }
-    
-    [HttpGet("{forumId:guid}/topics")]
-    [ProducesResponseType(400)]
-    [ProducesResponseType(410)]
-    [ProducesResponseType(200)]
-    public async Task<IActionResult> GetTopics(
-        [FromRoute] Guid forumId,
-        [FromQuery] GetTopicRequest request,
-        [FromServices] IGetTopicsUseCase useCase,
-        CancellationToken cancellationToken)
-    {
-        var (resources, totalCount) = await useCase.Execute(request.ToQuery(forumId), cancellationToken);
-        return Ok(new { resources = resources.Select(t => new CreateTopicRequest(t.Title, t.Content)), totalCount });
     }
 }

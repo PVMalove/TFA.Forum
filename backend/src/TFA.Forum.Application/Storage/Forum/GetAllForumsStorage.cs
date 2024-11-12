@@ -18,7 +18,7 @@ public class GetAllForumsStorage : IGetAllForumsStorage
     public async Task<IEnumerable<Domain.Entities.Forum>?> GetForums(CancellationToken cancellationToken)
     {
         return await memoryCache.GetOrCreateAsync<Domain.Entities.Forum[]>(
-            "Forums",
+            nameof(GetForums),
             entry =>
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(10);

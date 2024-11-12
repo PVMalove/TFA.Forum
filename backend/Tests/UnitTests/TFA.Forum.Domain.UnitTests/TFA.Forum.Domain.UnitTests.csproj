@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\TFA.Forum.Application\TFA.Forum.Application.csproj" />
+      <ProjectReference Include="..\..\..\src\TFA.Forum.Application\TFA.Forum.Application.csproj" />
     </ItemGroup>
 
 </Project>
