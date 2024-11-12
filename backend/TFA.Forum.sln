@@ -25,8 +25,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TFA.Forum.Application", "sr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D9DA22B7-6DEE-49FC-A29B-7B3B98753C38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TFA.Forum.Domain.UnitTests", "Tests\UnitTests\TFA.Forum.Domain.UnitTests\TFA.Forum.Domain.UnitTests.csproj", "{DA8F5A18-1D47-46D4-816F-ED6B39C27A3F}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{03A93D6A-C25E-4B14-AEB0-E7D1CBE18025}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "E2ETests", "E2ETests", "{FA3B5FFA-E29A-4C36-AFBD-1AA3D3E9F116}"
