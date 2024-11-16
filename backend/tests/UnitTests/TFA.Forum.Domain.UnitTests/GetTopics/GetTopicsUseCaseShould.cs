@@ -4,10 +4,10 @@ using FluentValidation.Results;
 using Moq;
 using Moq.Language.Flow;
 using TFA.Forum.Application.Queries.GetTopics;
-using TFA.Forum.Application.Storage.Forum;
-using TFA.Forum.Application.Storage.Topic;
 using TFA.Forum.Domain.Entities;
 using TFA.Forum.Domain.Exceptions;
+using TFA.Forum.Persistence.Storage.Forum;
+using TFA.Forum.Persistence.Storage.Topic;
 
 namespace TFA.Forum.Domain.UnitTests.GetTopics;
 

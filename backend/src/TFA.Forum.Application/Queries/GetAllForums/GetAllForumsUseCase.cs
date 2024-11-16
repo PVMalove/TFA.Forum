@@ -1,4 +1,4 @@
-﻿using TFA.Forum.Application.Storage.Forum;
+﻿using TFA.Forum.Persistence.Storage.Forum;
 
 namespace TFA.Forum.Application.Queries.GetAllForums;
 

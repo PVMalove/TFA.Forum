@@ -1,5 +1,5 @@
-﻿using TFA.Forum.Application.Storage.Forum;
-using TFA.Forum.Domain.Exceptions;
+﻿using TFA.Forum.Domain.Exceptions;
+using TFA.Forum.Persistence.Storage.Forum;
 
 namespace TFA.Forum.Application.Queries.GetAllForums;
 

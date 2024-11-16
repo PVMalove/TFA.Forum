@@ -1,6 +1,6 @@
 using TFA.Forum.Domain.Interfaces;
 
-namespace TFA.Forum.Application;
+namespace TFA.Forum.Persistence.Shared;
 
 public class GuidFactory : IGuidFactory
 {

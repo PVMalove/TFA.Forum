@@ -2,9 +2,9 @@
 using TFA.Forum.Application.Authentication;
 using TFA.Forum.Application.Authorization;
 using TFA.Forum.Application.Queries.GetAllForums;
-using TFA.Forum.Application.Storage.Forum;
-using TFA.Forum.Application.Storage.Topic;
 using TFA.Forum.Domain.Entities;
+using TFA.Forum.Persistence.Storage.Forum;
+using TFA.Forum.Persistence.Storage.Topic;
 
 namespace TFA.Forum.Application.Commands.CreateTopic;
 

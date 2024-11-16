@@ -1,4 +1,4 @@
-﻿namespace TFA.Forum.Application.Storage.Forum;
+﻿namespace TFA.Forum.Persistence.Storage.Forum;
 
 public interface IGetAllForumsStorage
 {

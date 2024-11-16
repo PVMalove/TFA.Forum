@@ -6,10 +6,10 @@ using Moq.Language.Flow;
 using TFA.Forum.Application.Authentication;
 using TFA.Forum.Application.Authorization;
 using TFA.Forum.Application.Commands.CreateTopic;
-using TFA.Forum.Application.Storage.Forum;
-using TFA.Forum.Application.Storage.Topic;
 using TFA.Forum.Domain.Entities;
 using TFA.Forum.Domain.Exceptions;
+using TFA.Forum.Persistence.Storage.Forum;
+using TFA.Forum.Persistence.Storage.Topic;
 
 namespace TFA.Forum.Domain.UnitTests.CreateTopic;
 

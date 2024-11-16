@@ -1,6 +1,8 @@
-﻿namespace TFA.Forum.Application.Commands.CreateForum;
+﻿using TFA.Forum.Domain.DTO.Forum;
+
+namespace TFA.Forum.Application.Commands.CreateForum;
 
 public interface ICreateForumUseCase
 {
-    Task<Domain.Entities.Forum> Execute(CreateForumCommand command, CancellationToken cancellationToken);
+    Task<ForumCreateDto> Execute(CreateForumCommand command, CancellationToken cancellationToken);
 }

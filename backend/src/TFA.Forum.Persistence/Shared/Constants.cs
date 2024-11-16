@@ -1,4 +1,4 @@
-﻿namespace TFA.Forum.Persistence.Configurations;
+﻿namespace TFA.Forum.Persistence.Shared;
 
 public static class Constants
 {

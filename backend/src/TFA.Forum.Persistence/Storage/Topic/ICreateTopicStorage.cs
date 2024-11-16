@@ -1,4 +1,4 @@
-﻿namespace TFA.Forum.Application.Storage.Topic;
+﻿namespace TFA.Forum.Persistence.Storage.Topic;
 
 public interface ICreateTopicStorage
 {

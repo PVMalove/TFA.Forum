@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using TFA.Forum.Domain.Exceptions;
 using TFA.Forum.Persistence.Configurations;
+using TFA.Forum.Persistence.Shared;
 
 
 namespace TFA.Forum.Application.Commands.CreateForum;

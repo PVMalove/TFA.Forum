@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Caching.Memory;
 using TFA.Forum.Domain.Interfaces.Repository;
 
-namespace TFA.Forum.Application.Storage.Forum;
+namespace TFA.Forum.Persistence.Storage.Forum;
 
 public class GetAllForumsStorage : IGetAllForumsStorage
 {
