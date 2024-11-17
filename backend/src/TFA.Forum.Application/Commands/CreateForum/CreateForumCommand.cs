@@ -1,3 +1,5 @@
-﻿namespace TFA.Forum.Application.Commands.CreateForum;
+﻿using TFA.Forum.Application.Abstractions;
 
-public record CreateForumCommand(string? Title);
+namespace TFA.Forum.Application.Commands.CreateForum;
+
+public record CreateForumCommand(string? Title)  : ICommand;

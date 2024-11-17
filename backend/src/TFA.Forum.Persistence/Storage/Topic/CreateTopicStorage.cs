@@ -30,11 +30,11 @@ public class CreateTopicStorage: ICreateTopicStorage
             AuthorId = AuthorId,
             Title = title,
             Content = content,
-            CreateAt = momentProvider.Now,
+            CreatedAt = momentProvider.Now,
         };
 
-        await topicRepository.CreateAsync(topic, cancellationToken);
-        await topicRepository.SaveChangesAsync(cancellationToken);
+        await topicRepository.Create(topic, cancellationToken);
+        await topicRepository.SaveChanges(cancellationToken);
 
         return await topicRepository.GetAll()
             .AsNoTracking()

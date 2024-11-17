@@ -1,10 +1,24 @@
-﻿namespace TFA.Forum.Domain.Entities;
+﻿using TFA.Forum.Domain.Entities.Interfaces;
+using TFA.Forum.Domain.ValueObjects;
 
-public class Forum
+namespace TFA.Forum.Domain.Entities;
+
+public class Forum : IAuditable
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
+    public Title Title { get; init; }
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
     
-    public string? Title { get; set; }
+    public ICollection<Topic> Topics { get; init; }
     
-    public ICollection<Topic> Topics { get; set; }
+    /// CtorEF
+    private Forum() { }
+    
+    public Forum(Guid id, Title title, DateTimeOffset createdAt)
+    {
+        Id = id;
+        Title = title;
+        CreatedAt = createdAt;
+    }
 }

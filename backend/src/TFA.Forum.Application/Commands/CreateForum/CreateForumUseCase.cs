@@ -1,12 +1,16 @@
-﻿using AutoMapper;
+﻿using CSharpFunctionalExtensions;
+using AutoMapper;
 using FluentValidation;
+using TFA.Forum.Application.Abstractions;
 using TFA.Forum.Application.Authorization;
+using TFA.Forum.Application.Extensions;
 using TFA.Forum.Domain.DTO.Forum;
+using TFA.Forum.Domain.Shared;
 using TFA.Forum.Persistence.Storage.Forum;
 
 namespace TFA.Forum.Application.Commands.CreateForum;
 
-public class CreateForumUseCase : ICreateForumUseCase
+public class CreateForumUseCase : ICommandHandler<ForumCreateDto, CreateForumCommand>
 {
     readonly IValidator<CreateForumCommand> validator;
     private readonly IIntentionManager intentionManager;
@@ -22,10 +26,14 @@ public class CreateForumUseCase : ICreateForumUseCase
         this.mapper = mapper;
     }
 
-
-    public async Task<ForumCreateDto> Execute(CreateForumCommand command, CancellationToken cancellationToken)
+    public async Task<Result<ForumCreateDto, ErrorList>> Execute(CreateForumCommand command,
+        CancellationToken cancellationToken)
     {
-        await validator.ValidateAndThrowAsync(command, cancellationToken);
+        var validateResult = await validator.ValidateAsync(command, cancellationToken);
+
+        if (!validateResult.IsValid) 
+            return validateResult.ToList();
+        
         intentionManager.ThrowIfForbidden(ForumIntention.Create);
 
         var result = await storage.Create(command.Title, cancellationToken);

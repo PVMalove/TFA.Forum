@@ -20,7 +20,7 @@ public class Topic : IAuditable
 
     public ICollection<Comment> Comments { get; set; }
     
-    public DateTimeOffset CreateAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
     
-    public DateTimeOffset? UpdateAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
 }

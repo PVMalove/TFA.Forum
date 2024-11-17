@@ -6,7 +6,7 @@ namespace TFA.Forum.Application.Mapping;
 public class ForumMapping : Profile
 {
     public ForumMapping()
-    {
+    { 
         CreateMap<Domain.Entities.Forum, ForumCreateDto>();
     }
 }

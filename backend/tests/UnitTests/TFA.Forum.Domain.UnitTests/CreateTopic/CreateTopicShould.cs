@@ -8,6 +8,7 @@ using TFA.Forum.Application.Authorization;
 using TFA.Forum.Application.Commands.CreateTopic;
 using TFA.Forum.Domain.Entities;
 using TFA.Forum.Domain.Exceptions;
+using TFA.Forum.Domain.ValueObjects;
 using TFA.Forum.Persistence.Storage.Forum;
 using TFA.Forum.Persistence.Storage.Topic;
 
@@ -68,7 +69,7 @@ public class CreateTopicShould
         var userId = Guid.Parse("91B714CC-BDFF-47A1-A6DC-E71DDE8C25F7");
 
         intentionIsAllowedSetup.Returns(true);
-        getForumsSetup.ReturnsAsync(new Entities.Forum[] { new() { Id = forumId } });
+        getForumsSetup.ReturnsAsync(new Entities.Forum[] { new(forumId, Title.Create("Some title").Value, DateTimeOffset.Now)});
         getCurrentUserIdSetup.Returns(userId);
         var expected = new Topic();
         createTopicSetup.ReturnsAsync(expected);

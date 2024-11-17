@@ -3,8 +3,8 @@
 public interface IBaseRepository<TEntity>
 {
     IQueryable<TEntity> GetAll();
-    Task<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken);
+    Task<TEntity> Create(TEntity entity, CancellationToken cancellationToken);
     TEntity Update(TEntity entity);
     void Remove(TEntity entity);
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    Task<int> SaveChanges(CancellationToken cancellationToken);
 }

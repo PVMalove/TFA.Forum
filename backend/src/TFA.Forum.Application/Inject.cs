@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using TFA.Forum.Application.Abstractions;
 using TFA.Forum.Application.Authentication;
 using TFA.Forum.Application.Authorization;
 using TFA.Forum.Application.Commands.CreateForum;
 using TFA.Forum.Application.Commands.CreateTopic;
+using TFA.Forum.Application.Extensions;
 using TFA.Forum.Application.Mapping;
 using TFA.Forum.Application.Queries.GetAllForums;
 using TFA.Forum.Application.Queries.GetTopics;
@@ -17,7 +19,7 @@ public static class Inject
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddScoped<IGetAllForumsUseCase, GetAllForumsUseCase>();
-        services.AddScoped<ICreateForumUseCase, CreateForumUseCase>();
+        //services.AddScoped<ICreateForumUseCase, CreateForumUseCase>();
         services.AddScoped<ICreateTopicUseCase, CreateTopicUseCase>();
         services.AddScoped<IGetTopicsUseCase, GetTopicsUseCase>();
 
@@ -34,7 +36,19 @@ public static class Inject
         services.AddAutoMapper(typeof(ForumMapping));
         
         services.AddMemoryCache();
+        services.AddHandlers();
         
         return services;
+    }
+    
+    private static IServiceCollection AddHandlers(this IServiceCollection collection)
+    {
+        collection.Scan(scan => scan.FromAssemblies(typeof(Inject).Assembly)
+            .AddClasses(classes => classes
+                .AssignableToAny(typeof(ICommandHandler<,>), typeof(ICommandHandler<>)))
+            .AsSelfWithInterfaces()
+            .WithScopedLifetime());
+
+        return collection;
     }
 }

@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using TFA.Forum.Domain.DTO.Forum;
 using TFA.Forum.Domain.Interfaces;
 using TFA.Forum.Domain.Interfaces.Repository;
+using TFA.Forum.Domain.ValueObjects;
 
 namespace TFA.Forum.Persistence.Storage.Forum;
 
@@ -24,14 +26,12 @@ public class CreateForumStorage : ICreateForumStorage
     public async Task<Domain.Entities.Forum> Create(string? title, CancellationToken cancellationToken)
     {
         var forumId = guidFactory.Create();
-        var forum = new Domain.Entities.Forum
-        {
-            Id = forumId,
-            Title = title
-        };
+        var forumTitle = Title.Create(title).Value;
         
-        await forumRepository.CreateAsync(forum, cancellationToken);
-        await forumRepository.SaveChangesAsync(cancellationToken);
+        var forum = new Domain.Entities.Forum(forumId, forumTitle, momentProvider.Now);
+
+        await forumRepository.Create(forum, cancellationToken);
+        await forumRepository.SaveChanges(cancellationToken);
         
         memoryCache.Remove(nameof(GetAllForumsStorage.GetForums));
 

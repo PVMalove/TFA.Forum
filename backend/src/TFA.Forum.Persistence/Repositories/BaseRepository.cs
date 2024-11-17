@@ -11,7 +11,7 @@ public class BaseRepository<TEntity>(ApplicationDbContext dbContext) : IBaseRepo
         return dbContext.Set<TEntity>();
     }
 
-    public async Task<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken)
+    public async Task<TEntity> Create(TEntity entity, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(entity);
         await dbContext.AddAsync(entity, cancellationToken);
@@ -31,7 +31,7 @@ public class BaseRepository<TEntity>(ApplicationDbContext dbContext) : IBaseRepo
         dbContext.Remove(entity);
     }
     
-    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+    public async Task<int> SaveChanges(CancellationToken cancellationToken)
     {
         return await dbContext.SaveChangesAsync(cancellationToken);
     }

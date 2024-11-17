@@ -8,9 +8,9 @@ public class Comment : IAuditable
     
     public string Content { get; set; }
 
-    public DateTimeOffset CreateAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
     
-    public DateTimeOffset? UpdateAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
     
     public User Author { get; set; }
     
