@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using FluentAssertions;
+using TFA.Forum.Domain.DTO.Forum;
 
 namespace TFA.Forum.E2E;
 
@@ -26,16 +27,11 @@ public class ForumEndpointsShould : IClassFixture<ForumApiApplicationFactory>
         using var response = await httpClient.PostAsync("api/v1.0/Forum/create_forum",
             JsonContent.Create(new { title = "New forum" }));
         response.Invoking(r => r.EnsureSuccessStatusCode()).Should().NotThrow();
-
-        // var forum = await response.Content.ReadFromJsonAsync<Forum.Domain.Entities.Forum>();
-        // forum
-        //     .Should().NotBeNull().And
-        //     .Subject.As<Forum.Domain.Entities.Forum>().Title.Should().Be("New forum");
         
         using var getForumsResponse = await httpClient.GetAsync("api/v1.0/Forum");
-        var forums = await getForumsResponse.Content.ReadFromJsonAsync<Forum.Domain.Entities.Forum[]>();
+        var forums = await getForumsResponse.Content.ReadFromJsonAsync<ForumCreateDto[]>();
         forums
             .Should().NotBeNull().And
-            .Subject.As<Forum.Domain.Entities.Forum[]>().Should().Contain(f => f.Title.Value == "New forum");
+            .Subject.As<ForumCreateDto[]>().Should().Contain(f => f.Title == "New forum");
     }
 }

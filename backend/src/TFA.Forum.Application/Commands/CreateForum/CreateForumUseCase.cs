@@ -31,12 +31,14 @@ public class CreateForumUseCase : ICommandHandler<ForumCreateDto, CreateForumCom
     {
         var validateResult = await validator.ValidateAsync(command, cancellationToken);
 
-        if (!validateResult.IsValid) 
+        if (!validateResult.IsValid)
             return validateResult.ToList();
-        
+
         intentionManager.ThrowIfForbidden(ForumIntention.Create);
 
         var result = await storage.Create(command.Title, cancellationToken);
-        return mapper.Map<ForumCreateDto>(result);
+        return result;
+        //ForumCreateDto forumCreateDto = mapper.Map<ForumCreateDto>(result);
+        //return forumCreateDto;
     }
 }

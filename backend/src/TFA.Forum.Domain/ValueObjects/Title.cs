@@ -1,5 +1,4 @@
 ﻿using CSharpFunctionalExtensions;
-using Newtonsoft.Json;
 using TFA.Forum.Domain.Shared;
 
 namespace TFA.Forum.Domain.ValueObjects;

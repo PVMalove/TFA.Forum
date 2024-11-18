@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using TFA.Forum.Domain.DTO.Forum;
 using TFA.Forum.Domain.Interfaces;
@@ -23,7 +24,7 @@ public class CreateForumStorage : ICreateForumStorage
         this.memoryCache = memoryCache;
     }
 
-    public async Task<Domain.Entities.Forum> Create(string? title, CancellationToken cancellationToken)
+    public async Task<ForumCreateDto> Create(string? title, CancellationToken cancellationToken)
     {
         var forumId = guidFactory.Create();
         var forumTitle = Title.Create(title).Value;
@@ -35,9 +36,11 @@ public class CreateForumStorage : ICreateForumStorage
         
         memoryCache.Remove(nameof(GetAllForumsStorage.GetForums));
 
-        return await forumRepository.GetAll()
+        var result = await forumRepository.GetAll()
             .AsNoTracking()
             .Where(t => t.Id == forumId)
             .FirstAsync(cancellationToken);
+        
+        return new ForumCreateDto(result.Title.Value, result.CreatedAt);
     }
 }

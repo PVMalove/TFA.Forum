@@ -4,7 +4,7 @@ namespace TFA.Forum.API.Response;
 
 public record Envelope
 {
-    public object? Result { get; }
+    public object? Result { get; set;}
     public ErrorList? Errors { get; init; }
     public DateTime TimeCreated { get; }
 

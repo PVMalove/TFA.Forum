@@ -18,8 +18,9 @@ public static class Inject
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
+        services.AddAutoMapper(typeof(ForumMapping));
+        
         services.AddScoped<IGetAllForumsUseCase, GetAllForumsUseCase>();
-        //services.AddScoped<ICreateForumUseCase, CreateForumUseCase>();
         services.AddScoped<ICreateTopicUseCase, CreateTopicUseCase>();
         services.AddScoped<IGetTopicsUseCase, GetTopicsUseCase>();
 
@@ -33,7 +34,6 @@ public static class Inject
         services.AddScoped<IMomentProvider, MomentProvider>();
 
         services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
-        services.AddAutoMapper(typeof(ForumMapping));
         
         services.AddMemoryCache();
         services.AddHandlers();
