@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using TFA.Forum.API.Controllers.Forum.Request;
 using TFA.Forum.API.Extensions;
 using TFA.Forum.API.Response;
-using TFA.Forum.API.Response;
 using TFA.Forum.Application.Commands.CreateForum;
 using TFA.Forum.Application.Commands.CreateTopic;
 using TFA.Forum.Application.Queries.GetAllForums;
@@ -25,7 +24,7 @@ public class ForumController : ApplicationController
         return Ok(forums?.Select(f => new GetAllForumRequest(f.Id, f.Title.Value)));
     }
     
-    [HttpPost("create_forum")]
+    [HttpPost("create")]
     [ProducesResponseType(400)]
     [ProducesResponseType(410)]
     [ProducesResponseType(201, Type = typeof(CreateTopicRequest))]

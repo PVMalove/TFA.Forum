@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
-using TFA.Forum.Persistence.Configurations;
-using TFA.Forum.Persistence.Shared;
+using TFA.Forum.Domain.Shared;
 
 
 namespace TFA.Forum.Application.Commands.CreateTopic;

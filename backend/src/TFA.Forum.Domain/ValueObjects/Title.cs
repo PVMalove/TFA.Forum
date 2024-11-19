@@ -11,8 +11,11 @@ public record Title
 
     public static Result<Title, Error> Create(string? value)
     {
-        if (string.IsNullOrWhiteSpace(value) || value.Length > 50)
+        if (string.IsNullOrWhiteSpace(value))
             return Errors.General.ValueIsInvalid("title");
+       
+        if (value.Length > Constants.MAX_LOW_TEXT_LENGTH_50)
+            return Errors.General.ValueIsRequired("title", value.Length);
 
         return new Title(value);
     }

@@ -1,8 +1,10 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using TFA.Forum.API.Response;
 using TFA.Forum.Application.Authorization;
 using TFA.Forum.Domain.Exceptions;
+using TFA.Forum.Domain.Shared;
 
 namespace TFA.Forum.API.Middlewares;
 
@@ -43,13 +45,17 @@ public class ErrorHandlingMiddleware
                     break;
                 default:
                     problemDetails = problemDetailsFactory.CreateProblemDetails(context,
-                        StatusCodes.Status500InternalServerError, "unhandled error! Please contact us.");
+                        StatusCodes.Status500InternalServerError, "Unhandled error! Please contact us.");
                     logger.LogError(exception, "Unhandled exception occured");
                     break;
             }
 
             context.Response.StatusCode = problemDetails.Status ?? StatusCodes.Status500InternalServerError;
-            await context.Response.WriteAsJsonAsync(problemDetails, problemDetails.GetType());
+            
+            var error = Error.Failure(problemDetails.Status.ToString()!, problemDetails.Title!, problemDetails.GetType().ToString() );
+            var envelope = Envelope.Error(error);
+            
+            await context.Response.WriteAsJsonAsync(envelope);
         }
     }
 }

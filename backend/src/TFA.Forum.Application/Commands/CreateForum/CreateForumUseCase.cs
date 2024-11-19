@@ -38,7 +38,5 @@ public class CreateForumUseCase : ICommandHandler<ForumCreateDto, CreateForumCom
 
         var result = await storage.Create(command.Title, cancellationToken);
         return result;
-        //ForumCreateDto forumCreateDto = mapper.Map<ForumCreateDto>(result);
-        //return forumCreateDto;
     }
 }

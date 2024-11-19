@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TFA.Forum.Domain.Entities;
-using TFA.Forum.Persistence.Shared;
+using TFA.Forum.Domain.Shared;
 
 namespace TFA.Forum.Persistence.Configurations;
 
