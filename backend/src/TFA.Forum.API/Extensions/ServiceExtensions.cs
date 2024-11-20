@@ -15,7 +15,7 @@ public static class ServiceExtensions
 
         services.AddPersistence(builder.Configuration);
         services.AddApplication();
-
+        services.AddApiLogging(builder.Configuration, builder.Environment);
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
         
          services.AddApiVersioning()
