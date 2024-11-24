@@ -9,6 +9,6 @@ public class ForumMapping : Profile
     {
         CreateMap<Domain.Entities.Forum, ForumCreateDto>()
             .ForMember(dest => dest.Title, opt => opt.Ignore())
-            .ConstructUsing(src => new ForumCreateDto(src.Title.Value, src.CreatedAt));
+            .ConstructUsing(src => new ForumCreateDto(src.Id, src.Title.Value, src.CreatedAt));
     }
 }

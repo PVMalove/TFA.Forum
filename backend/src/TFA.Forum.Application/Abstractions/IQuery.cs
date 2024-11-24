@@ -1,3 +1,3 @@
-﻿namespace PetFamily.Core.Abstractions;
+﻿namespace TFA.Forum.Application.Abstractions;
 
 public interface IQuery;

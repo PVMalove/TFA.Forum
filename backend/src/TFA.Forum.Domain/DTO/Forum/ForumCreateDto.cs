@@ -1,3 +1,3 @@
 ﻿namespace TFA.Forum.Domain.DTO.Forum;
 
-public record ForumCreateDto(string? Title, DateTimeOffset CreatedAt);
+public record ForumCreateDto(Guid Id, string? Title, DateTimeOffset CreatedAt);

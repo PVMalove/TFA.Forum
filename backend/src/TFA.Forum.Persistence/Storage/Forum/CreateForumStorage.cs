@@ -40,6 +40,6 @@ public class CreateForumStorage : ICreateForumStorage
             .Where(t => t.Id == forumId)
             .FirstAsync(cancellationToken);
         
-        return new ForumCreateDto(result.Title.Value, result.CreatedAt);
+        return new ForumCreateDto(result.Id, result.Title.Value, result.CreatedAt);
     }
 }

@@ -14,7 +14,7 @@ public record Title
         if (string.IsNullOrWhiteSpace(value))
             return Errors.General.ValueIsInvalid("title");
        
-        if (value.Length > Constants.MAX_LOW_TEXT_LENGTH_50)
+        if (value.Length > Constants.MAX_LOW_SOLT_LENGTH_50)
             return Errors.General.ValueIsRequired("title", value.Length);
 
         return new Title(value);

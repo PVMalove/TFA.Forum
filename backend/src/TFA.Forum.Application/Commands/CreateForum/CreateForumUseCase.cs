@@ -15,15 +15,13 @@ public class CreateForumUseCase : ICommandHandler<ForumCreateDto, CreateForumCom
     readonly IValidator<CreateForumCommand> validator;
     private readonly IIntentionManager intentionManager;
     private readonly ICreateForumStorage storage;
-    private readonly IMapper mapper;
 
     public CreateForumUseCase(IValidator<CreateForumCommand> validator, IIntentionManager intentionManager,
-        ICreateForumStorage storage, IMapper mapper)
+        ICreateForumStorage storage)
     {
         this.validator = validator;
         this.intentionManager = intentionManager;
         this.storage = storage;
-        this.mapper = mapper;
     }
 
     public async Task<Result<ForumCreateDto, ErrorList>> Execute(CreateForumCommand command,
