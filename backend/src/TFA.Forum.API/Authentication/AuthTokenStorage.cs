@@ -4,7 +4,7 @@ internal class AuthTokenStorage : IAuthTokenStorage
 {
     private const string HeaderKey = "TFA-Auth-Token";
 
-    public bool TryExtract(HttpContext httpContext, out string token)
+    public bool TryExtract(HttpContext httpContext, out string? token)
     {
         if (httpContext.Request.Headers.TryGetValue(HeaderKey, out var values) &&
             !string.IsNullOrWhiteSpace(values.FirstOrDefault()))

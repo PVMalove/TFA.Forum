@@ -9,7 +9,7 @@ using TFA.Forum.Persistence.Storage.User;
 
 namespace TFA.Forum.Application.Commands.SignIn;
 
-public class SignInUseCase : ICommandHandler<SignInResultDto, SignInCommand>
+public class SignInUseCase : ICommandHandler<SignInResponse, SignInCommand>
 {
     private readonly IValidator<SignInCommand> validator;
     private readonly ISignInStorage storage;
@@ -31,7 +31,7 @@ public class SignInUseCase : ICommandHandler<SignInResultDto, SignInCommand>
         configuration = options.Value;
     }
 
-    public async Task<Result<SignInResultDto, ErrorList>> Execute(
+    public async Task<Result<SignInResponse, ErrorList>> Execute(
         SignInCommand command, CancellationToken cancellationToken)
     {
         var validateResult = await validator.ValidateAsync(command, cancellationToken);
@@ -39,21 +39,18 @@ public class SignInUseCase : ICommandHandler<SignInResultDto, SignInCommand>
         if (!validateResult.IsValid)
             return validateResult.ToList();
 
-        var recognisedUser = await storage.FindUser(command.Login, cancellationToken);
-        if (recognisedUser is null)
-        {
-            throw new Exception();
-        }
+        var existsUser = await storage.FindUserByLogin(command.Login, cancellationToken);
+        if (existsUser is null)
+            return Errors.User.InvalidCredentials().ToErrorList();
+        
+        var passwordCorrect = passwordManager.ComparePasswords(
+            command.Password, existsUser.Salt, existsUser.PasswordHash);
+        if (!passwordCorrect)
+            return Errors.User.InvalidCredentials().ToErrorList();
 
-        var passwordMatches = passwordManager.ComparePasswords(
-            command.Password, recognisedUser.Salt, recognisedUser.PasswordHash);
-        if (!passwordMatches)
-        {
-            throw new Exception();
-        }
-
-        var token = await encryptor.Encrypt(recognisedUser.UserId.ToString(), configuration.Key, cancellationToken);
-        var result = new SignInResultDto(new User(recognisedUser.UserId), token);
+        var token = await encryptor.Encrypt(existsUser.UserId.ToString(), configuration.Key, cancellationToken);
+        var identity = new User(existsUser.UserId);
+        var result = new SignInResponse(identity, token);
         return result;
     }
 }

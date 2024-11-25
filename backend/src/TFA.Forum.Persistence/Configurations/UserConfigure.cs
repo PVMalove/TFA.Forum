@@ -10,8 +10,8 @@ public class UserConfigure : IEntityTypeConfiguration<User>
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.HasKey(u => u.Id);
-        builder.Property(u => u.Login).IsRequired().HasMaxLength(Constants.MAX_LOW_SOLT_LENGTH_50);
-        builder.Property(u => u.Salt).HasMaxLength(Constants.MAX_LOW_SOLT_LENGTH_50);
+        builder.Property(u => u.Login).IsRequired().HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH_25);
+        builder.Property(u => u.Salt).HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH_50);
         builder.Property(u => u.PasswordHash).IsRequired().HasMaxLength(Constants.MAX_LOW_PASSWORD_HASH_LENGTH_32);
         builder.HasMany(u => u.Topics)
             .WithOne(t => t.Author)

@@ -20,12 +20,13 @@ public static class Inject
         services.AddScoped<IBaseRepository<Domain.Entities.Forum>, BaseRepository<Domain.Entities.Forum>>();
         services.AddScoped<IBaseRepository<Topic>, BaseRepository<Topic>>();
         services.AddScoped<IBaseRepository<User>, BaseRepository<User>>();
-        
+
         services.AddScoped<IGetAllForumsStorage, GetAllForumsStorage>();
         services.AddScoped<ICreateForumStorage, CreateForumStorage>();
         services.AddScoped<IGetTopicsStorage, GetTopicsStorage>();
         services.AddScoped<ICreateTopicStorage, CreateTopicStorage>();
         services.AddScoped<ISignInStorage, SignInStorage>();
+        services.AddScoped<ISignOnStorage, SignOnStorage>();
         
         return services;
     }

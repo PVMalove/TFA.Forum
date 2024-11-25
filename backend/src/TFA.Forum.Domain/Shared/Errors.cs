@@ -40,6 +40,14 @@ public static class Errors
             return Error.Validation("insufficient_items", $"Insufficient number of {label} to complete the operation");
         }
     }
+    
+    public static class User
+    {
+        public static Error InvalidCredentials()
+        {
+            return Error.Validation("invalid_user_credentials", "Invalid user credentials");
+        }
+    }
 
     public static class Model
     {

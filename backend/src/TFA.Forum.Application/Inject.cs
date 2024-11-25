@@ -31,8 +31,8 @@ public static class Inject
         services.AddScoped<IIdentityProvider, IdentityProvider>();
         services.AddScoped<IPasswordManager, PasswordManager>();
         services.AddScoped<IAuthenticationService, AuthenticationService>();
-        services.AddScoped<ISymmetricDecryptor, AesSymmetricEncryptorDecryptor>();
-        services.AddScoped<ISymmetricEncryptor, AesSymmetricEncryptorDecryptor>();
+        services.AddScoped<ISymmetricDecryptor, AesSymmetric>();
+        services.AddScoped<ISymmetricEncryptor, AesSymmetric>();
         
         services.AddScoped<IGuidFactory, GuidFactory>();
         services.AddScoped<IMomentProvider, MomentProvider>();

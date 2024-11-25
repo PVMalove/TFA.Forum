@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using System.Security.Cryptography;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +20,7 @@ public class ForumApiApplicationFactory : WebApplicationFactory<Program>, IAsync
             .AddInMemoryCollection(new Dictionary<string, string>
             {
                 ["ConnectionStrings:DbConnection"] = dbContainer.GetConnectionString(),
+                ["Authentication:Base64Key"] = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32)),
             }!)
             .Build();
         builder.UseConfiguration(configuration);

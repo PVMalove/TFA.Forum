@@ -3,7 +3,7 @@ using System.Text;
 
 namespace TFA.Forum.Application.Authentication;
 
-internal class AesSymmetricEncryptorDecryptor : ISymmetricEncryptor, ISymmetricDecryptor
+internal class AesSymmetric : ISymmetricEncryptor, ISymmetricDecryptor
 {
     private const int IvSize = 16;
     private readonly Lazy<Aes> aes = new(Aes.Create);

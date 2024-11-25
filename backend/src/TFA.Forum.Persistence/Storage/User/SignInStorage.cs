@@ -13,13 +13,13 @@ internal class SignInStorage : ISignInStorage
         this.userRepository = userRepository;
     }
 
-    public async Task<RecognisedUserDto?> FindUser(string login, CancellationToken cancellationToken)
+    public async Task<ExistsUserDto?> FindUserByLogin(string login, CancellationToken cancellationToken)
     {
         var result = await userRepository.GetAll()
             .AsNoTracking()
             .Where(u => u.Login.Equals(login))
             .FirstAsync(cancellationToken);
         
-        return new RecognisedUserDto(result.Id, result.Salt, result.PasswordHash);
+        return new ExistsUserDto(result.Id, result.Salt, result.PasswordHash);
     }
 }

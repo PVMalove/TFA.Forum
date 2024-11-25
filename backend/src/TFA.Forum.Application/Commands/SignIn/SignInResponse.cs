@@ -2,4 +2,4 @@
 
 namespace TFA.Forum.Application.Commands.SignIn;
 
-public record SignInResultDto(IIdentity Identity, string Token);
+public record SignInResponse(IIdentity Identity, string Token);

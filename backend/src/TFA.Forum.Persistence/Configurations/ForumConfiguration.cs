@@ -15,7 +15,7 @@ public class ForumConfiguration : IEntityTypeConfiguration<Forum.Domain.Entities
             fb.Property(f => f.Value)
                 .HasColumnName("title")
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_LOW_SOLT_LENGTH_50);
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH_50);
         });
         
         builder
