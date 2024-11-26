@@ -3,7 +3,7 @@ using System.Text;
 
 namespace TFA.Forum.Application.Authentication;
 
-internal class PasswordManager : IPasswordManager
+public class PasswordManager : IPasswordManager
 {
     private const int SaltLength = 100;
     private readonly Lazy<SHA256> sha256 = new(SHA256.Create);
