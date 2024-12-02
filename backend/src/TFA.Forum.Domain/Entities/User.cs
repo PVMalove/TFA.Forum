@@ -1,11 +1,27 @@
-﻿namespace TFA.Forum.Domain.Entities;
+﻿using TFA.Forum.Domain.Entities.Interfaces;
+using TFA.Forum.Domain.EntityIds;
 
-public class User
+namespace TFA.Forum.Domain.Entities;
+
+public class User : Entity<AuthorId>
 {
-    public Guid Id { get; set; }
-    public required string Login { get; set; }
+    public string Login { get; init; } = null!;
     public byte[] Salt { get; set; }
     public byte[] PasswordHash { get; set; }
-    public ICollection<Topic> Topics { get; set; }
-    public ICollection<Comment> Comments { get; set; }
+    public ICollection<Topic> Topics { get; init; } = null!;
+    public ICollection<Comment> Comments { get; init; } = null!;
+    
+    protected User(AuthorId id) : base(id) { }
+    
+    private User(AuthorId id, string login, byte[] salt, byte[] passwordHash) : base(id)
+    {
+        Login = login;
+        Salt = salt;
+        PasswordHash = passwordHash;
+    }
+    
+    public static User Create(AuthorId id, string login, byte[] salt, byte[] passwordHash)
+    {
+        return new User(id, login, salt, passwordHash);
+    }
 }

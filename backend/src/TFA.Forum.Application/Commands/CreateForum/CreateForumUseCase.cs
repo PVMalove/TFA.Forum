@@ -28,13 +28,13 @@ public class CreateForumUseCase : ICommandHandler<ForumCreateDto, CreateForumCom
         CancellationToken cancellationToken)
     {
         var validateResult = await validator.ValidateAsync(command, cancellationToken);
-
         if (!validateResult.IsValid)
             return validateResult.ToList();
 
         intentionManager.ThrowIfForbidden(ForumIntention.Create);
 
         var result = await storage.Create(command.Title, cancellationToken);
+        
         return result;
     }
 }

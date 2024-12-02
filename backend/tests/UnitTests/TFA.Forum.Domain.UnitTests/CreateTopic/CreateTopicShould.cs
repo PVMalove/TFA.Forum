@@ -6,7 +6,9 @@ using Moq.Language.Flow;
 using TFA.Forum.Application.Authentication;
 using TFA.Forum.Application.Authorization;
 using TFA.Forum.Application.Commands.CreateTopic;
+using TFA.Forum.Domain.DTO.Topic;
 using TFA.Forum.Domain.Entities;
+using TFA.Forum.Domain.EntityIds;
 using TFA.Forum.Domain.Exceptions;
 using TFA.Forum.Domain.ValueObjects;
 using TFA.Forum.Persistence.Storage.Forum;
@@ -16,14 +18,14 @@ namespace TFA.Forum.Domain.UnitTests.CreateTopic;
 
 public class CreateTopicShould
 {
-    private readonly ICreateTopicUseCase sut;
+    private readonly CreateTopicUseCase sut;
     private readonly Mock<ICreateTopicStorage> storage;
-    private readonly ISetup<ICreateTopicStorage, Task<Topic>> createTopicSetup;
+    private readonly ISetup<ICreateTopicStorage, Task<TopicCreateDto>> createTopicSetup;
     private readonly ISetup<IIdentity,Guid> getCurrentUserIdSetup;
     private readonly ISetup<IIntentionManager,bool> intentionIsAllowedSetup;
     private readonly Mock<IIntentionManager> intentionManager;
     private readonly Mock<IGetAllForumsStorage> getForumsStorage;
-    public readonly ISetup<IGetAllForumsStorage, Task<IEnumerable<Entities.Forum>?>> getForumsSetup;
+    private readonly ISetup<IGetAllForumsStorage, Task<IEnumerable<Entities.Forum>?>> getForumsSetup;
 
 
     public CreateTopicShould()
@@ -65,17 +67,19 @@ public class CreateTopicShould
     [Fact]
     public async Task ReturnNewlyCreatedTopic_WhenMatchingForumExists()
     {
-        var forumId = Guid.Parse("E20A64A3-47E3-4076-96D0-7EF226EAF5F2");
+        var forumId = ForumId.Create(Guid.Parse("E20A64A3-47E3-4076-96D0-7EF226EAF5F2"));
         var userId = Guid.Parse("91B714CC-BDFF-47A1-A6DC-E71DDE8C25F7");
 
+        var forum = Entities.Forum.Create(forumId, Title.Create("Some title").Value, DateTimeOffset.UtcNow);
+        
         intentionIsAllowedSetup.Returns(true);
-        getForumsSetup.ReturnsAsync(new Entities.Forum[] { new(forumId, Title.Create("Some title").Value, DateTimeOffset.Now)});
+        getForumsSetup.ReturnsAsync(new[] { forum });
         getCurrentUserIdSetup.Returns(userId);
-        var expected = new Topic();
+        var expected = new TopicCreateDto(Guid.NewGuid(),forumId, userId, "Some title", "Some content", DateTimeOffset.UtcNow);
         createTopicSetup.ReturnsAsync(expected);
 
-        var actual = await sut.Execute(new CreateTopicCommand(forumId, "Some title","Some content"), CancellationToken.None);
-        actual.Should().Be(expected);
+        var actual = await sut.Execute(new CreateTopicCommand(forumId, "Some title", "Some content"), CancellationToken.None);
+        actual.Value.Should().Be(expected);
 
         storage.Verify(s => s.CreateTopic(forumId, userId, "Some title","Some content", It.IsAny<CancellationToken>()), Times.Once);
     }

@@ -1,3 +1,5 @@
-﻿namespace TFA.Forum.Application.Commands.CreateTopic;
+﻿using TFA.Forum.Application.Abstractions;
 
-public record CreateTopicCommand(Guid ForumId, string? Title, string? Content);
+namespace TFA.Forum.Application.Commands.CreateTopic;
+
+public record CreateTopicCommand(Guid ForumId, string? Title, string? Content) : ICommand;

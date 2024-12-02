@@ -9,8 +9,8 @@ using TFA.Forum.Application.Extensions;
 using TFA.Forum.Application.Mapping;
 using TFA.Forum.Application.Queries.GetAllForums;
 using TFA.Forum.Application.Queries.GetTopics;
+using TFA.Forum.Application.Shared;
 using TFA.Forum.Domain.Interfaces;
-using TFA.Forum.Persistence.Shared;
 
 namespace TFA.Forum.Application;
 
@@ -21,7 +21,7 @@ public static class Inject
         services.AddAutoMapper(typeof(ForumMapping));
         
         services.AddScoped<IGetAllForumsUseCase, GetAllForumsUseCase>();
-        services.AddScoped<ICreateTopicUseCase, CreateTopicUseCase>();
+        //services.AddScoped<ICreateTopicUseCase, CreateTopicUseCase>();
         services.AddScoped<IGetTopicsUseCase, GetTopicsUseCase>();
 
         services.AddScoped<IIntentionResolver, ForumIntentionResolver>();

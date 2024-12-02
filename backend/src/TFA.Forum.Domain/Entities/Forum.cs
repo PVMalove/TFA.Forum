@@ -1,24 +1,27 @@
 ﻿using TFA.Forum.Domain.Entities.Interfaces;
+using TFA.Forum.Domain.EntityIds;
 using TFA.Forum.Domain.ValueObjects;
 
 namespace TFA.Forum.Domain.Entities;
 
-public class Forum : IAuditable
+public class Forum : Entity<ForumId>, IAuditable
 {
-    public Guid Id { get; init; }
-    public Title Title { get; init; }
-    public DateTimeOffset CreatedAt { get; set; }
+    public Title Title  { get; init; } = null!;
+    public DateTimeOffset CreatedAt { get; init; }
     public DateTimeOffset UpdatedAt { get; set; }
     
-    public ICollection<Topic> Topics { get; init; }
+    public IReadOnlyList<Topic> Topics { get; private set;  } = null!;
     
-    /// CtorEF
-    private Forum() { }
+    protected Forum(ForumId id) : base(id) { }
     
-    public Forum(Guid id, Title title, DateTimeOffset createdAt)
+    private Forum(ForumId id, Title title, DateTimeOffset createdAt) : base(id)
     {
-        Id = id;
         Title = title;
         CreatedAt = createdAt;
+    }
+    
+    public static Forum Create(ForumId id, Title title, DateTimeOffset createdAt)
+    {
+        return new Forum(id, title, createdAt);
     }
 }

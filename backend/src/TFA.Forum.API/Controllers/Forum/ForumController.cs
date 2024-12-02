@@ -41,19 +41,19 @@ public class ForumController : ApplicationController
         return Ok(Envelope.Ok(result.Value));
     }
     
-    [HttpGet("{forumId:guid}/topics")]
-    [ProducesResponseType(400)]
-    [ProducesResponseType(410)]
-    [ProducesResponseType(200)]
-    public async Task<IActionResult> GetTopics(
-        [FromRoute] Guid forumId,
-        [FromQuery] GetTopicRequest request,
-        [FromServices] IGetTopicsUseCase useCase,
-        CancellationToken cancellationToken)
-    {
-        var (resources, totalCount) = await useCase.Execute(request.ToQuery(forumId), cancellationToken);
-        return Ok(new { resources = resources.Select(t => new CreateTopicRequest(t.Title, t.Content)), totalCount });
-    }
+    // [HttpGet("{forumId:guid}/topics")]
+    // [ProducesResponseType(400)]
+    // [ProducesResponseType(410)]
+    // [ProducesResponseType(200)]
+    // public async Task<IActionResult> GetTopics(
+    //     [FromRoute] Guid forumId,
+    //     [FromQuery] GetTopicRequest request,
+    //     [FromServices] IGetTopicsUseCase useCase,
+    //     CancellationToken cancellationToken)
+    // {
+    //     var (resources, totalCount) = await useCase.Execute(request.ToQuery(forumId), cancellationToken);
+    //     return Ok(new { resources = resources.Select(t => new CreateTopicRequest(t.Title, t.Content)), totalCount });
+    // }
 
     [HttpPost("{forumId:guid}/topic")]
     [ProducesResponseType(400)]
@@ -63,10 +63,15 @@ public class ForumController : ApplicationController
     public async Task<IActionResult> CreateTopic(
         [FromRoute] Guid forumId,
         [FromBody] CreateTopicRequest request,
-        [FromServices] ICreateTopicUseCase useCase,
+        [FromServices] CreateTopicUseCase useCase,
         CancellationToken cancellationToken)
     {
-        var topic = await useCase.Execute(request.ToCommand(forumId), cancellationToken);
-        return CreatedAtRoute("all_forums", new CreateTopicRequest(topic.Title, topic.Content));
+        var result = await useCase.Execute(request.ToCommand(forumId), cancellationToken);
+        if (result.IsFailure) 
+            return result.Error.ToResponse();
+        
+        return Ok(Envelope.Ok(result.Value));
+        
+        //return CreatedAtRoute("all_forums", new CreateTopicRequest(topic.Title, topic.Content));
     }
 }

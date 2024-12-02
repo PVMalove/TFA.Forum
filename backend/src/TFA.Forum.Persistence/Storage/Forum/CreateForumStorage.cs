@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using TFA.Forum.Domain.DTO.Forum;
+using TFA.Forum.Domain.EntityIds;
 using TFA.Forum.Domain.Interfaces;
 using TFA.Forum.Domain.Interfaces.Repository;
 using TFA.Forum.Domain.ValueObjects;
@@ -25,10 +26,10 @@ public class CreateForumStorage : ICreateForumStorage
 
     public async Task<ForumCreateDto> Create(string? title, CancellationToken cancellationToken)
     {
-        var forumId = guidFactory.Create();
+        var forumId = ForumId.NewId(guidFactory);
         var forumTitle = Title.Create(title).Value;
-        
-        var forum = new Domain.Entities.Forum(forumId, forumTitle, momentProvider.Now);
+
+        var forum = Domain.Entities.Forum.Create(forumId, forumTitle, momentProvider.Now);
 
         await forumRepository.Create(forum, cancellationToken);
         await forumRepository.SaveChanges(cancellationToken);
