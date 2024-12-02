@@ -12,9 +12,11 @@ namespace TFA.Forum.Persistence;
 
 public static class Inject
 {
+    private const string DATABASE = "DbConnection";
+    
     public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("DbConnection");
+        var connectionString = configuration.GetConnectionString(DATABASE);
         services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
         
         services.AddScoped<IBaseRepository<Domain.Entities.Forum>, BaseRepository<Domain.Entities.Forum>>();

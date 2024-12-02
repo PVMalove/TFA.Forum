@@ -1,4 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
+using TFA.Forum.Domain.DTO.Forum;
+using TFA.Forum.Domain.Models;
 using TFA.Forum.Domain.Shared;
 
 namespace TFA.Forum.Application.Abstractions;

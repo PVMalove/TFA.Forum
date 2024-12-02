@@ -20,7 +20,7 @@ public static class Inject
     {
         services.AddAutoMapper(typeof(ForumMapping));
         
-        services.AddScoped<IGetAllForumsUseCase, GetAllForumsUseCase>();
+        //services.AddScoped<IGetAllForumsUseCase, GetAllForumsUseCase>();
         //services.AddScoped<ICreateTopicUseCase, CreateTopicUseCase>();
         services.AddScoped<IGetTopicsUseCase, GetTopicsUseCase>();
 
@@ -52,7 +52,13 @@ public static class Inject
                 .AssignableToAny(typeof(ICommandHandler<,>), typeof(ICommandHandler<>)))
             .AsSelfWithInterfaces()
             .WithScopedLifetime());
-
+        
+        collection.Scan(scan => scan.FromAssemblies(typeof(Inject).Assembly)
+            .AddClasses(classes => classes
+                .AssignableTo(typeof(IQueryHandler<,>)))
+            .AsSelfWithInterfaces()
+            .WithScopedLifetime());
+        
         return collection;
     }
 }

@@ -17,11 +17,15 @@ public class ForumController : ApplicationController
     [HttpGet(Name = "all_forums")]
     [ProducesResponseType(200, Type = typeof(GetAllForumRequest[]))]
     public async Task<IActionResult> GetForums(
-        [FromServices] IGetAllForumsUseCase useCase,
+        [FromQuery] GetForumsWithPaginationRequest request,
+        [FromServices] GetAllForumsUseCase useCase,
         CancellationToken cancellationToken)
     {
-        var forums = await useCase.Execute(cancellationToken);
-        return Ok(forums?.Select(f => new GetAllForumRequest(f.Id, f.Title.Value)));
+        var result = await useCase.Execute(request.ToQuery(), cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
     }
     
     [HttpPost("create")]
