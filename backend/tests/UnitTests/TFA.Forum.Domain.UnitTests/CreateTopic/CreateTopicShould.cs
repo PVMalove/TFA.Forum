@@ -6,6 +6,7 @@ using Moq.Language.Flow;
 using TFA.Forum.Application.Authentication;
 using TFA.Forum.Application.Authorization;
 using TFA.Forum.Application.Commands.CreateTopic;
+using TFA.Forum.Domain.DTO.Forum;
 using TFA.Forum.Domain.DTO.Topic;
 using TFA.Forum.Domain.Entities;
 using TFA.Forum.Domain.EntityIds;
@@ -25,7 +26,7 @@ public class CreateTopicShould
     private readonly ISetup<IIntentionManager,bool> intentionIsAllowedSetup;
     private readonly Mock<IIntentionManager> intentionManager;
     private readonly Mock<IGetAllForumsStorage> getForumsStorage;
-    private readonly ISetup<IGetAllForumsStorage, Task<IEnumerable<Entities.Forum>?>> getForumsSetup;
+    private readonly ISetup<IGetAllForumsStorage, Task<IReadOnlyList<ForumGetDto>?>> getForumsSetup;
 
 
     public CreateTopicShould()
@@ -73,7 +74,7 @@ public class CreateTopicShould
         var forum = Entities.Forum.Create(forumId, Title.Create("Some title").Value, DateTimeOffset.UtcNow);
         
         intentionIsAllowedSetup.Returns(true);
-        getForumsSetup.ReturnsAsync(new[] { forum });
+        getForumsSetup.ReturnsAsync(new[] { new ForumGetDto(forumId, "Some title", DateTimeOffset.UtcNow) });
         getCurrentUserIdSetup.Returns(userId);
         var expected = new TopicCreateDto(Guid.NewGuid(),forumId, userId, "Some title", "Some content", DateTimeOffset.UtcNow);
         createTopicSetup.ReturnsAsync(expected);
@@ -90,7 +91,7 @@ public class CreateTopicShould
         var forumId = Guid.Parse("1D85F69E-6F37-4A2D-A5B0-12CE45F4DCD7");
 
         intentionIsAllowedSetup.Returns(true);
-        getForumsSetup.ReturnsAsync(Array.Empty<Entities.Forum>());
+        getForumsSetup.ReturnsAsync(Array.Empty<ForumGetDto>());
 
         await sut.Invoking(s => s.Execute(new CreateTopicCommand(forumId, "Some title","Some content"), CancellationToken.None))
             .Should().ThrowAsync<ForumNotFoundException>();

@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using TFA.Forum.Domain.DTO.Forum;
 using TFA.Forum.Domain.Interfaces.Repository;
-using TFA.Forum.Domain.Models;
-using TFA.Forum.Persistence.Extensions;
 
 namespace TFA.Forum.Persistence.Storage.Forum;
 
@@ -36,10 +34,10 @@ public class GetAllForumsStorage : IGetAllForumsStorage
             });
     }
 
-    public async Task<PagedList<ForumsDto>> GetForumsWithPagination(string? sortBy, string? sortDirection, int page, int pageSize,
-        CancellationToken token)
+    public async Task<IReadOnlyList<ForumGetDto>> GetAllSortedForums(string? sortBy, string? sortDirection,
+        CancellationToken cancellationToken)
     {
-        var query  = forumRepository.GetAll().AsNoTracking();
+        var query = forumRepository.GetAll().AsNoTracking();
         
         var keySelector = SortByProperty(sortBy);
         
@@ -47,21 +45,20 @@ public class GetAllForumsStorage : IGetAllForumsStorage
             ? query .OrderByDescending(keySelector)
             : query .OrderBy(keySelector);
 
-        var forumsQuery = query.Select(f => new ForumsDto(f.Id, f.Title.Value, f.CreatedAt));
+        var result = await query.Select(f => new ForumGetDto(f.Id, f.Title.Value, f.CreatedAt)).ToArrayAsync(cancellationToken);
 
-        var result = await forumsQuery.GetObjectsWithPagination(page, pageSize, token);
         return result;
     }
     
     private static Expression<Func<Domain.Entities.Forum, object>> SortByProperty(string? sortBy)
     {
         if (string.IsNullOrEmpty(sortBy))
-            return volunteer => volunteer.Id;
+            return forum => forum.Id;
 
         Expression<Func<Domain.Entities.Forum, object>> keySelector = sortBy?.ToLower() switch
         {
             "title" => forum => forum.Title.Value,
-            "CreatedAt" => forum => forum.CreatedAt,
+            "created" => forum => forum.CreatedAt,
             _ => forum => forum.Id
         };
         return keySelector;

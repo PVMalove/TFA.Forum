@@ -2,8 +2,6 @@
 
 namespace TFA.Forum.Application.Queries.GetAllForums;
 
-public record GetAllForumsWithPaginationQuery(
+public record GetAllSortedForumsQuery(
     string? SortBy,
-    string? SortDirection,
-    int Page,
-    int PageSize): IQuery;
+    string? SortDirection): IQuery;

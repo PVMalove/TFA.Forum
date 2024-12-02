@@ -1,5 +1,4 @@
 ﻿using CSharpFunctionalExtensions;
-using AutoMapper;
 using FluentValidation;
 using TFA.Forum.Application.Abstractions;
 using TFA.Forum.Application.Authorization;

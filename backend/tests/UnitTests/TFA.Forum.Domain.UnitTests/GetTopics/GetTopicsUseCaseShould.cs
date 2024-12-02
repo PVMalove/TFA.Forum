@@ -4,6 +4,7 @@ using FluentValidation.Results;
 using Moq;
 using Moq.Language.Flow;
 using TFA.Forum.Application.Queries.GetTopics;
+using TFA.Forum.Domain.DTO.Forum;
 using TFA.Forum.Domain.Entities;
 using TFA.Forum.Domain.EntityIds;
 using TFA.Forum.Domain.Exceptions;
@@ -18,7 +19,7 @@ public class GetTopicsUseCaseShould
     private readonly GetTopicsUseCase sut;
     private readonly Mock<IGetTopicsStorage> storage;
     private readonly ISetup<IGetTopicsStorage,Task<(IEnumerable<Topic> resources, int totalCount)>> getTopicsSetup;
-    private readonly ISetup<IGetAllForumsStorage, Task<IEnumerable<Entities.Forum>?>> getForumsSetup;
+    private readonly ISetup<IGetAllForumsStorage, Task<IReadOnlyList<ForumGetDto>?>> getForumsSetup;
 
     public GetTopicsUseCaseShould()
     {
@@ -43,7 +44,7 @@ public class GetTopicsUseCaseShould
         var forumId_1 = ForumId.Create(Guid.Parse("01B1C554-184B-4B32-913E-F7031AAD3BAC"));
         var forumId_2 = ForumId.Create(Guid.Parse("64C3B227-8D4A-4A0E-A161-04F19C2ABBC4"));
 
-        getForumsSetup.ReturnsAsync(new[] { Entities.Forum.Create(forumId_1, Title.Create("Some title").Value, DateTimeOffset.Now)});
+        getForumsSetup.ReturnsAsync(new[] { new ForumGetDto(forumId_1, "Some title", DateTimeOffset.Now) });
 
         var query = new GetTopicsQuery(forumId_2, 0, 1);
         await sut.Invoking(s => s.Execute(query, CancellationToken.None))
@@ -58,7 +59,7 @@ public class GetTopicsUseCaseShould
             Title.Create("Some title").Value, Content.Create("Some content").Value, DateTimeOffset.Now);
         
         
-        getForumsSetup.ReturnsAsync(new[] { Entities.Forum.Create(forumId, Title.Create("Some title").Value, DateTimeOffset.Now)});
+        getForumsSetup.ReturnsAsync(new[] { new ForumGetDto(forumId, "Some title", DateTimeOffset.Now) });
         var expectedResources = new[] { topic };
         var expectedTotalCount = 6;
         getTopicsSetup.ReturnsAsync((expectedResources, expectedTotalCount));

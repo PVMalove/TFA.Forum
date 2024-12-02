@@ -14,10 +14,10 @@ namespace TFA.Forum.API.Controllers.Forum;
 [ApiVersion("1.0")]
 public class ForumController : ApplicationController
 {
-    [HttpGet(Name = "all_forums")]
+    [HttpGet]
     [ProducesResponseType(200, Type = typeof(GetAllForumRequest[]))]
     public async Task<IActionResult> GetForums(
-        [FromQuery] GetForumsWithPaginationRequest request,
+        [FromQuery] GetSortedForumsRequest request,
         [FromServices] GetAllForumsUseCase useCase,
         CancellationToken cancellationToken)
     {
@@ -75,7 +75,5 @@ public class ForumController : ApplicationController
             return result.Error.ToResponse();
         
         return Ok(Envelope.Ok(result.Value));
-        
-        //return CreatedAtRoute("all_forums", new CreateTopicRequest(topic.Title, topic.Content));
     }
 }
