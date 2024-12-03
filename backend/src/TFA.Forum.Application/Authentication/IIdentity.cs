@@ -3,12 +3,7 @@
 public interface IIdentity
 {
     Guid UserId { get; }
-}
-
-public class User(Guid userId) : IIdentity
-{
-    public Guid UserId { get; } = userId;
-    public static User Guest => new(Guid.Empty);
+    Guid SessionId { get; }
 }
 
 public static class IdentityExtensions

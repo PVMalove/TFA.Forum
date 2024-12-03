@@ -18,7 +18,7 @@ internal class SignOnStorage : ISignOnStorage
     
     public async Task<Guid> CreateUser(string login, byte[] salt, byte[] hash, CancellationToken cancellationToken)
     {
-        var userIdValue = AuthorId.NewId(guidFactory);
+        var userIdValue = UserId.NewId(guidFactory);
         
         var user = Domain.Entities.User.Create(userIdValue, login, salt, hash);
 

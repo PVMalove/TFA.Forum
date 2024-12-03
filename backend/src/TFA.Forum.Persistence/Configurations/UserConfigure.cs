@@ -14,7 +14,7 @@ public class UserConfigure : IEntityTypeConfiguration<User>
         builder.Property(u => u.Id)
             .HasConversion(
                 id => id.Id,
-                result => AuthorId.Create(result)
+                result => UserId.Create(result)
             );
         
         builder.Property(u => u.Login).IsRequired().HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH_25);
@@ -23,10 +23,14 @@ public class UserConfigure : IEntityTypeConfiguration<User>
         
         builder.HasMany(u => u.Topics)
             .WithOne(t => t.Author)
-            .HasForeignKey(t => t.AuthorId);
+            .HasForeignKey(t => t.UserId);
         
         builder.HasMany(u => u.Comments)
             .WithOne(c => c.Author)
-            .HasForeignKey(c => c.AuthorId);
+            .HasForeignKey(c => c.UserId);
+        
+        builder.HasMany(u => u.Sessions)
+            .WithOne(s => s.User)
+            .HasForeignKey(c => c.UserId);
     }
 }

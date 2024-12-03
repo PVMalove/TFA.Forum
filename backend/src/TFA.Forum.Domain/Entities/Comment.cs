@@ -15,7 +15,7 @@ public class Comment : IAuditable
     
     public User Author { get; set; }
     
-    public AuthorId AuthorId  { get; set; }
+    public UserId UserId  { get; set; }
     
     public Topic Topic { get; set; }
     

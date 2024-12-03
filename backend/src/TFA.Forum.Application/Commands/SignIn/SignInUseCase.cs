@@ -11,6 +11,9 @@ namespace TFA.Forum.Application.Commands.SignIn;
 
 public class SignInUseCase : ICommandHandler<SignInResponse, SignInCommand>
 {
+    private readonly TimeSpan defaultSessionLifetime = TimeSpan.FromHours(1);
+    private readonly TimeSpan rememberMeSessionLifetime = TimeSpan.FromDays(30);
+    
     private readonly IValidator<SignInCommand> validator;
     private readonly ISignInStorage storage;
     private readonly IPasswordManager passwordManager;
@@ -47,9 +50,13 @@ public class SignInUseCase : ICommandHandler<SignInResponse, SignInCommand>
             command.Password, existsUser.Salt, existsUser.PasswordHash);
         if (!passwordCorrect)
             return Errors.User.InvalidCredentials().ToErrorList();
-
-        var token = await encryptor.Encrypt(existsUser.UserId.ToString(), configuration.Key, cancellationToken);
-        var identity = new User(existsUser.UserId);
+        
+        var sessionExpiry = DateTimeOffset.UtcNow + (command.RememberMe ? rememberMeSessionLifetime : defaultSessionLifetime);
+        
+        var sessionId = await storage.CreateSession(existsUser.UserId, sessionExpiry, cancellationToken);
+        
+        var token = await encryptor.Encrypt(sessionId.ToString(), configuration.Key, cancellationToken);
+        var identity = new User(existsUser.UserId, sessionId);
         var result = new SignInResponse(identity, token);
         return result;
     }

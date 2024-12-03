@@ -16,21 +16,6 @@ internal class GetTopicsStorage : IGetTopicsStorage
         this.topicRepository = topicRepository;
     }
 
-    public async Task<(IEnumerable<Domain.Entities.Topic> resources, int totalCount)> GetTopics(
-        Guid forumId, int skip, int take, CancellationToken cancellationToken)
-    {
-        var query = topicRepository.GetAll().Where(t => t.ForumId == forumId);
-        var totalCount = await query.CountAsync(cancellationToken);
-
-        var resources = await query
-            .AsNoTracking()
-            .Skip(skip)
-            .Take(take)
-            .ToArrayAsync(cancellationToken);
-
-        return (resources, totalCount);
-    }
-
     public Task<PagedList<TopicGetDto>> GetTopicsWithPagination(Guid forumId, string? sortBy, string? sortDirection, int page, int pageSize,
         CancellationToken cancellationToken)
     {
@@ -44,7 +29,7 @@ internal class GetTopicsStorage : IGetTopicsStorage
             ? query .OrderByDescending(keySelector)
             : query .OrderBy(keySelector);
         
-        var topicsQuery = query.Select(t => new TopicGetDto(t.Id, t.ForumId, t.AuthorId, t.Title.Value, t.Content.Value, t.CreatedAt));
+        var topicsQuery = query.Select(t => new TopicGetDto(t.Id, t.ForumId, t.UserId, t.Title.Value, t.Content.Value, t.CreatedAt));
         
         var result = topicsQuery.GetObjectsWithPagination(page, pageSize, cancellationToken);
         return result;

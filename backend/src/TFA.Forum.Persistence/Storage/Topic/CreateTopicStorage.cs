@@ -25,7 +25,7 @@ public class CreateTopicStorage: ICreateTopicStorage
     {
         var topicIdValue = TopicId.NewId(guidFactory);
         var forumIdValue = ForumId.Create(forumId);
-        var authorIdValue = AuthorId.Create(authorId);
+        var authorIdValue = UserId.Create(authorId);
         var titleValue = Title.Create(title).Value;
         var contentValue = Content.Create(content).Value;
         
@@ -39,7 +39,7 @@ public class CreateTopicStorage: ICreateTopicStorage
             .Where(t => t.Id == topicIdValue)
             .FirstAsync(cancellationToken);
         
-        return new TopicCreateDto(result.Id, result.ForumId, result.AuthorId, result.Title.Value, result.Content.Value,
+        return new TopicCreateDto(result.Id, result.ForumId, result.UserId, result.Title.Value, result.Content.Value,
             result.CreatedAt);
     }
 }

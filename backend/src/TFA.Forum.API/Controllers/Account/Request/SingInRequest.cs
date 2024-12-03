@@ -2,8 +2,8 @@
 
 namespace TFA.Forum.API.Controllers.Account.Request;
 
-public record SingInRequest(string Login, string Password)
+public record SingInRequest(string Login, string Password, bool RememberMe = false)
 {
     public SignInCommand ToCommand() => 
-        new(Login, Password);
+        new(Login, Password, RememberMe);
 }

@@ -30,7 +30,7 @@ public class SignOnUseCase : ICommandHandler<IIdentity, SignOnCommand>
         var (salt, hash) = passwordManager.GeneratePasswordParts(command.Password);
         var userId = await storage.CreateUser(command.Login, salt, hash, cancellationToken);
 
-        var result = new User(userId);
+        var result = new User(userId, Guid.Empty);;
         return result;
     }
 }

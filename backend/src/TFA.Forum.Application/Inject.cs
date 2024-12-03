@@ -5,6 +5,7 @@ using TFA.Forum.Application.Authentication;
 using TFA.Forum.Application.Authorization;
 using TFA.Forum.Application.Commands.CreateForum;
 using TFA.Forum.Application.Commands.CreateTopic;
+using TFA.Forum.Application.Commands.SingOut;
 using TFA.Forum.Application.Extensions;
 using TFA.Forum.Application.Mapping;
 using TFA.Forum.Application.Queries.GetAllForums;
@@ -19,13 +20,10 @@ public static class Inject
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddAutoMapper(typeof(ForumMapping));
-        
-        //services.AddScoped<IGetAllForumsUseCase, GetAllForumsUseCase>();
-        //services.AddScoped<ICreateTopicUseCase, CreateTopicUseCase>();
-        //services.AddScoped<IGetTopicsUseCase, GetTopicsUseCase>();
 
         services.AddScoped<IIntentionResolver, ForumIntentionResolver>();
         services.AddScoped<IIntentionResolver, TopicIntentionResolver>();
+        services.AddScoped<IIntentionResolver, AccountIntentionResolver>();
         
         services.AddScoped<IIntentionManager, IntentionManager>();
         services.AddScoped<IIdentityProvider, IdentityProvider>();

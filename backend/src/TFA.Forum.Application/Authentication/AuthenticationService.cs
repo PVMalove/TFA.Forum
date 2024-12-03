@@ -1,24 +1,53 @@
-﻿using Microsoft.Extensions.Options;
+﻿using System.Security.Cryptography;
+using Microsoft.Extensions.Options;
+using TFA.Forum.Persistence.Storage.User;
 
 namespace TFA.Forum.Application.Authentication;
 
-internal class AuthenticationService : IAuthenticationService
+public class AuthenticationService : IAuthenticationService
 {
     private readonly ISymmetricDecryptor decryptor;
+    private readonly IAuthenticationStorage storage;
     private readonly AuthenticationConfiguration configuration;
 
     public AuthenticationService(
         ISymmetricDecryptor decryptor,
+        IAuthenticationStorage storage,
         IOptions<AuthenticationConfiguration> options)
     {
         this.decryptor = decryptor;
+        this.storage = storage;
         configuration = options.Value;
     }
 
     public async Task<IIdentity> Authenticate(string authToken, CancellationToken cancellationToken)
     {
-        var userIdString = await decryptor.Decrypt(authToken, configuration.Key, cancellationToken);
-        // TODO: verify user identifier
-        return new User(Guid.Parse(userIdString));
+        string sessionIdString;
+        try
+        {
+            sessionIdString = await decryptor.Decrypt(authToken, configuration.Key, cancellationToken);
+        }
+        catch (CryptographicException cryptographicException)
+        {
+            return User.Guest;
+        }
+
+        if (!Guid.TryParse(sessionIdString, out var sessionId))
+        {
+            return User.Guest;
+        }
+
+        var session = await storage.FindSession(sessionId, cancellationToken);
+        if (session is null)
+        {
+            return User.Guest;
+        }
+
+        if (session.ExpiresAt < DateTimeOffset.UtcNow)
+        {
+            return User.Guest;
+        }
+
+        return new User(session.UserId, sessionId);
     }
 }

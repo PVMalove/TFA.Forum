@@ -31,8 +31,11 @@ public class ForumEndpointsShould : IClassFixture<ForumApiApplicationFactory>
         var response = await httpClient.GetAsync("api/v1.0/Forum");
         response.EnsureSuccessStatusCode();
 
-        var initialForums = await response.Content.ReadFromJsonAsync<ForumGetDto[]>();
-        initialForums.Should().NotBeNull()
+        var jsonResponse = await response.Content.ReadAsStringAsync();
+        var result = JsonSerializer.Deserialize<ApiResponse<ForumGetDto[]>>(jsonResponse, jsonOptions);
+        result.Should().NotBeNull();
+        result!.Errors.Should().BeNull();
+        result.Result.Should().NotBeNull()
             .And.NotContain(f => f.Title.Equals(forumTitle));
     }
 

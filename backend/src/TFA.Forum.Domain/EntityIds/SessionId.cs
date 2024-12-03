@@ -1,0 +1,15 @@
+﻿using TFA.Forum.Domain.Interfaces;
+
+namespace TFA.Forum.Domain.EntityIds;
+
+public record SessionId
+{
+    public Guid Id { get; }
+    
+    private SessionId(Guid id) => Id = id;
+
+    public static SessionId NewId(IGuidFactory guidFactory) => new(guidFactory.Create());
+    public static SessionId Create(Guid id) => new(id);
+    public static implicit operator Guid(SessionId sessionId) => sessionId.Id;  
+    
+}

@@ -1,6 +1,4 @@
 using Asp.Versioning.ApiExplorer;
-using Serilog;
-using Serilog.Filters;
 using TFA.Forum.API.Extensions;
 using TFA.Forum.API.Middlewares;
 
@@ -30,7 +28,9 @@ app.UseSwaggerUI(config =>
 app.UseCors(x=> x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 app.UseAuthorization();
 app.MapControllers();
-app.UseMiddleware<ErrorHandlingMiddleware>();
+app
+    .UseMiddleware<ErrorHandlingMiddleware>()
+    .UseMiddleware<AuthenticationMiddleware>();
 app.Run();
 
 namespace TFA.Forum.API

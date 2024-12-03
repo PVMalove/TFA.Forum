@@ -20,9 +20,16 @@ public class IntentionManager : IIntentionManager
         var matchingResolver = resolvers.OfType<IIntentionResolver<TIntention>>().FirstOrDefault();
         return matchingResolver?.IsAllowed(identityProvider.Current, intention) ?? false;
     }
+}
 
-    public bool IsAllowed<TIntention, TObject>(TIntention intention, TObject target) where TIntention : struct
+public static class IntentionManagerExtensions
+{
+    public static void ThrowIfForbidden<TIntention>(this IIntentionManager intentionManager, TIntention intention)
+        where TIntention : struct
     {
-        throw new NotImplementedException();
+        if (!intentionManager.IsAllowed(intention))
+        {
+            throw new IntentionManagerException();
+        }
     }
 }

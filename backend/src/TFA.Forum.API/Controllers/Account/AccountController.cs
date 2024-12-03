@@ -6,6 +6,7 @@ using TFA.Forum.API.Extensions;
 using TFA.Forum.API.Response;
 using TFA.Forum.Application.Commands.SignIn;
 using TFA.Forum.Application.Commands.SignOn;
+using TFA.Forum.Application.Commands.SingOut;
 
 namespace TFA.Forum.API.Controllers.Account;
 
@@ -25,7 +26,6 @@ public class AccountController : ApplicationController
         return Ok(Envelope.Ok(result.Value));
     }
     
-    
     [HttpPost("sign_in")]
     public async Task<IActionResult> SignIn(
         [FromBody] SingInRequest request,
@@ -41,5 +41,15 @@ public class AccountController : ApplicationController
             return result.Error.ToResponse();
         
         return Ok(Envelope.Ok(result.Value));
+    }
+    
+    
+    [HttpPost("sign_out")]
+    public async Task<IActionResult> SignOut(
+        [FromServices] SignOutUseCase useCase,
+        CancellationToken cancellationToken)
+    {
+        await useCase.Execute(new SignOutCommand(), cancellationToken);
+        return Ok(Envelope.Ok());
     }
 }

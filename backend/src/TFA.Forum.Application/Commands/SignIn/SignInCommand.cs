@@ -2,4 +2,4 @@
 
 namespace TFA.Forum.Application.Commands.SignIn;
 
-public record SignInCommand(string Login, string Password) : ICommand;
+public record SignInCommand(string Login, string Password, bool RememberMe) : ICommand;
