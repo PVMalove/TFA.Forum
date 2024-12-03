@@ -45,7 +45,7 @@ public class GetAllForumsStorage : IGetAllForumsStorage
             ? query .OrderByDescending(keySelector)
             : query .OrderBy(keySelector);
 
-        var result = await query.Select(f => new ForumGetDto(f.Id, f.Title.Value, f.CreatedAt)).ToArrayAsync(cancellationToken);
+        var result = await query.Select(f => new ForumGetDto(f.Id, f.Title.Value, f.CreatedAt)).ToListAsync(cancellationToken);
 
         return result;
     }

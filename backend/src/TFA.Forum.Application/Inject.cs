@@ -22,7 +22,7 @@ public static class Inject
         
         //services.AddScoped<IGetAllForumsUseCase, GetAllForumsUseCase>();
         //services.AddScoped<ICreateTopicUseCase, CreateTopicUseCase>();
-        services.AddScoped<IGetTopicsUseCase, GetTopicsUseCase>();
+        //services.AddScoped<IGetTopicsUseCase, GetTopicsUseCase>();
 
         services.AddScoped<IIntentionResolver, ForumIntentionResolver>();
         services.AddScoped<IIntentionResolver, TopicIntentionResolver>();

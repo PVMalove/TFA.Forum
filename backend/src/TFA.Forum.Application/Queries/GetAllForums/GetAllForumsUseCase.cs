@@ -8,9 +8,10 @@ namespace TFA.Forum.Application.Queries.GetAllForums;
 
 public class GetAllForumsUseCase(IGetAllForumsStorage storage) : IQueryHandler<IReadOnlyList<ForumGetDto>, GetAllSortedForumsQuery>
 {
-    public async Task<Result<IReadOnlyList<ForumGetDto>, ErrorList>> Execute(GetAllSortedForumsQuery query, CancellationToken token)
+    public async Task<Result<IReadOnlyList<ForumGetDto>, ErrorList>> Execute(GetAllSortedForumsQuery query, CancellationToken cancellationToken)
     {
-        var result = await storage.GetAllSortedForums(query.SortBy, query.SortDirection, token);
-        return result.ToList();
+        var result = await storage.GetAllSortedForums(query.SortBy, query.SortDirection, cancellationToken);
+
+        return result.ToList().AsReadOnly();
     }
 }

@@ -1,8 +1,10 @@
-﻿namespace TFA.Forum.Persistence.Storage.Topic;
+﻿using TFA.Forum.Domain.DTO.Topic;
+using TFA.Forum.Domain.Models;
+
+namespace TFA.Forum.Persistence.Storage.Topic;
 
 
 public interface IGetTopicsStorage
 {
-    Task<(IEnumerable<Domain.Entities.Topic> resources, int totalCount)> GetTopics(
-        Guid forumId, int skip, int take, CancellationToken cancellationToken);
+    Task<PagedList<TopicGetDto>> GetTopicsWithPagination(Guid forumId, string? sortBy, string? sortDirection, int page, int pageSize, CancellationToken cancellationToken);
 }

@@ -10,5 +10,5 @@ public interface ICommandHandler<TResponse, in TCommand> where TCommand : IComma
 
 public interface ICommandHandler<in TCommand> where TCommand : ICommand
 {
-    public Task<UnitResult<ErrorList>> Execute(TCommand command, CancellationToken token = default);
+    public Task<UnitResult<ErrorList>> Execute(TCommand command, CancellationToken cancellationToken = default);
 }

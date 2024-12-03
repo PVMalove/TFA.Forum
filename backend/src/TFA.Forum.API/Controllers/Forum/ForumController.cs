@@ -25,7 +25,7 @@ public class ForumController : ApplicationController
         if (result.IsFailure)
             return result.Error.ToResponse();
 
-        return Ok(result.Value);
+        return Ok(Envelope.Ok(result.Value));
     }
     
     [HttpPost("create")]
@@ -38,26 +38,28 @@ public class ForumController : ApplicationController
         CancellationToken cancellationToken)
     {
         var result = await useCase.Execute(request.ToCommand(), cancellationToken);
-        
         if (result.IsFailure) 
             return result.Error.ToResponse();
 
         return Ok(Envelope.Ok(result.Value));
     }
     
-    // [HttpGet("{forumId:guid}/topics")]
-    // [ProducesResponseType(400)]
-    // [ProducesResponseType(410)]
-    // [ProducesResponseType(200)]
-    // public async Task<IActionResult> GetTopics(
-    //     [FromRoute] Guid forumId,
-    //     [FromQuery] GetTopicRequest request,
-    //     [FromServices] IGetTopicsUseCase useCase,
-    //     CancellationToken cancellationToken)
-    // {
-    //     var (resources, totalCount) = await useCase.Execute(request.ToQuery(forumId), cancellationToken);
-    //     return Ok(new { resources = resources.Select(t => new CreateTopicRequest(t.Title, t.Content)), totalCount });
-    // }
+    [HttpGet("{forumId:guid}/topics")]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(410)]
+    [ProducesResponseType(200)]
+    public async Task<IActionResult> GetTopics(
+        [FromRoute] Guid forumId,
+        [FromQuery] GetTopicsWithPaginationRequest request,
+        [FromServices] GetTopicsUseCase useCase,
+        CancellationToken cancellationToken)
+    {
+        var result = await useCase.Execute(request.ToQuery(forumId), cancellationToken);
+        if (result.IsFailure) 
+            return result.Error.ToResponse();
+
+        return Ok(Envelope.Ok(result.Value));
+    }
 
     [HttpPost("{forumId:guid}/topic")]
     [ProducesResponseType(400)]
