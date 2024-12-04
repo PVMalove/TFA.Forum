@@ -4,5 +4,5 @@ namespace TFA.Forum.Persistence.Storage.User;
 
 public interface IAuthenticationStorage
 {
-    Task<SessionDto> FindSession(Guid sessionId, CancellationToken cancellationToken);
+    Task<SessionDto?> FindSession(Guid sessionId, CancellationToken cancellationToken);
 }

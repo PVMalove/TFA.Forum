@@ -15,7 +15,7 @@ public class AuthenticationStorage : IAuthenticationStorage
         this.sessionRepository = sessionRepository;
     }
 
-    public async Task<SessionDto> FindSession(Guid sessionId, CancellationToken cancellationToken)
+    public async Task<SessionDto?> FindSession(Guid sessionId, CancellationToken cancellationToken)
     {
         var result = await sessionRepository.GetAll()
             .Where(s => s.Id == sessionId)

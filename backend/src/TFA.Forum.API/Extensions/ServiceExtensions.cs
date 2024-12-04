@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using TFA.Forum.API.Authentication;
 using TFA.Forum.API.Configurations;
+using TFA.Forum.API.Monitoring;
 using TFA.Forum.Application;
 using TFA.Forum.Application.Authentication;
 using TFA.Forum.Persistence;
@@ -20,6 +21,7 @@ public static class ServiceExtensions
         services.AddScoped<IAuthTokenStorage, AuthTokenStorage>();
         services.Configure<AuthenticationConfiguration>(builder.Configuration.GetSection("Authentication").Bind);
         services.AddApiLogging(builder.Configuration, builder.Environment);
+        services.AddApiMetrics();
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
         
          services.AddApiVersioning()

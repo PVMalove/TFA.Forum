@@ -7,7 +7,6 @@ using Testcontainers.PostgreSql;
 using TFA.Forum.API;
 using TFA.Forum.Persistence;
 
-
 namespace TFA.Forum.E2E;
 
 public class ForumApiApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime

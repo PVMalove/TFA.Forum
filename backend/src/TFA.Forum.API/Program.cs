@@ -28,6 +28,7 @@ app.UseSwaggerUI(config =>
 app.UseCors(x=> x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 app.UseAuthorization();
 app.MapControllers();
+app.MapPrometheusScrapingEndpoint();
 app
     .UseMiddleware<ErrorHandlingMiddleware>()
     .UseMiddleware<AuthenticationMiddleware>();

@@ -16,6 +16,5 @@ internal static class LoggingCollectionExtensions
                 .WriteTo.OpenSearch(
                     configuration.GetConnectionString("Logs"),
                     "forum-logs-{0:yyyy.MM.dd}"))
-            .WriteTo.Logger(lc => lc.WriteTo.Console())
             .CreateLogger()));
 }
