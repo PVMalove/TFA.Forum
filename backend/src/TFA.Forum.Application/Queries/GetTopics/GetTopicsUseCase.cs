@@ -29,10 +29,12 @@ public class GetTopicsUseCase : IQueryHandler<PagedList<TopicGetDto>, GetTopicsW
     public async Task<Result<PagedList<TopicGetDto>, ErrorList>> Execute(GetTopicsWithPaginationQuery query, CancellationToken cancellationToken = default)
     {
         var validationResult = await validator.ValidateAsync(query, cancellationToken);
-        if (validationResult.IsValid == false)
+        if (!validationResult.IsValid)
             return validationResult.ToList();
         
-        await getForumsStorage.ThrowIfForumNotFound(query.ForumId, cancellationToken);
+        var forumResult = await getForumsStorage.ThrowIfForumNotFound(query.ForumId, cancellationToken);
+        if (forumResult.IsFailure)
+            return forumResult.Error.ToErrorList();
         
         var result = await getTopicsStorage.GetTopicsWithPagination(query.ForumId, query.SortBy, query.SortDirection, query.Page, query.PageSize, cancellationToken);
         return result;

@@ -1,8 +1,10 @@
 ﻿using System.Linq.Expressions;
+using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using TFA.Forum.Domain.DTO.Forum;
 using TFA.Forum.Domain.Interfaces.Repository;
+using TFA.Forum.Domain.Shared;
 
 namespace TFA.Forum.Persistence.Storage.Forum;
 
@@ -34,10 +36,13 @@ public class GetAllForumsStorage : IGetAllForumsStorage
             });
     }
 
-    public async Task<IReadOnlyList<ForumGetDto>> GetAllSortedForums(string? sortBy, string? sortDirection,
+    public async Task<Result<IReadOnlyList<ForumGetDto>, Error>>  GetAllSortedForums(string? sortBy, string? sortDirection,
         CancellationToken cancellationToken)
     {
-        var query = forumRepository.GetAll().AsNoTracking();
+        var query = forumRepository.GetAll()?.AsNoTracking();
+        
+        if (query is null)
+            return Errors.General.NotFound();
         
         var keySelector = SortByProperty(sortBy);
         

@@ -24,7 +24,7 @@ public static class Errors
 
         public static Error NotFound(Guid? id = null)
         {
-            var forId = id == null ? "" : $" for Id '{id}'";
+            var forId = id == null ? "" : $"for Id - '{id}'";
             return Error.NotFound("record_not_found", $"record not found {forId}");
         }
 

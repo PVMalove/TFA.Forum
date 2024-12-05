@@ -2,7 +2,7 @@
 
 public interface IBaseRepository<TEntity>
 {
-    IQueryable<TEntity> GetAll();
+    IQueryable<TEntity>? GetAll();
     Task<TEntity> Create(TEntity entity, CancellationToken cancellationToken);
     TEntity Update(TEntity entity);
     void Remove(TEntity entity);

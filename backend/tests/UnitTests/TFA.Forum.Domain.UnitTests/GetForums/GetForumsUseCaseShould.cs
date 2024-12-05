@@ -1,9 +1,10 @@
-﻿using FluentAssertions;
+﻿using CSharpFunctionalExtensions;
+using FluentAssertions;
 using Moq;
 using Moq.Language.Flow;
-using TFA.Forum.Application.Monitoring;
 using TFA.Forum.Application.Queries.GetAllForums;
 using TFA.Forum.Domain.DTO.Forum;
+using TFA.Forum.Domain.Shared;
 using TFA.Forum.Persistence.Storage.Forum;
 
 namespace TFA.Forum.Domain.UnitTests.GetForums;
@@ -11,7 +12,7 @@ namespace TFA.Forum.Domain.UnitTests.GetForums;
 public class GetForumsUseCaseShould
 {
     private readonly GetAllForumsUseCase sut;
-    private readonly ISetup<IGetAllForumsStorage,Task<IReadOnlyList<ForumGetDto>>> getForumsSetup;
+    private readonly ISetup<IGetAllForumsStorage,Task<Result<IReadOnlyList<ForumGetDto>, Error>>> getForumsSetup;
     private readonly Mock<IGetAllForumsStorage> storage;
 
     public GetForumsUseCaseShould()
@@ -19,7 +20,7 @@ public class GetForumsUseCaseShould
         storage = new Mock<IGetAllForumsStorage>();
         getForumsSetup = storage.Setup(s => s.GetAllSortedForums( It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()));
 
-        sut = new GetAllForumsUseCase(storage.Object, new DomainMetrics());
+        sut = new GetAllForumsUseCase(storage.Object);
     }
 
     [Fact]

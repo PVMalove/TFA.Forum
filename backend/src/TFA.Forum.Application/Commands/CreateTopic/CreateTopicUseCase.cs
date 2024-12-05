@@ -42,7 +42,11 @@ public class CreateTopicUseCase : ICommandHandler<TopicCreateDto, CreateTopicCom
             return validateResult.ToList();
         
         intentionManager.ThrowIfForbidden(TopicIntention.Create);
-        await getForumsStorage.ThrowIfForumNotFound(command.ForumId, cancellationToken);
+        
+        var forumResult = await getForumsStorage.ThrowIfForumNotFound(command.ForumId, cancellationToken);
+        if (forumResult.IsFailure)
+            return forumResult.Error.ToErrorList();
+        
 
         var result = await storage.CreateTopic(command.ForumId, identityProvider.Current.UserId, command.Title, command.Content, cancellationToken);
         return result;

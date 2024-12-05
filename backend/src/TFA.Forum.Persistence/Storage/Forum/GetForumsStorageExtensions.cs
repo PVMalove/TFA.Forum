@@ -1,18 +1,20 @@
-﻿using TFA.Forum.Domain.Exceptions;
-using TFA.Forum.Persistence.Storage.Forum;
+﻿using CSharpFunctionalExtensions;
+using TFA.Forum.Domain.Shared;
 
-namespace TFA.Forum.Application.Queries.GetAllForums;
+namespace TFA.Forum.Persistence.Storage.Forum;
 
 
-internal static class GetForumsStorageExtensions
+public static class GetForumsStorageExtensions
 {
-    public static async Task ThrowIfForumNotFound(this IGetAllForumsStorage storage, Guid forumId,
+    public static async Task<UnitResult<Error>> ThrowIfForumNotFound(this IGetAllForumsStorage storage, Guid forumId,
         CancellationToken cancellationToken)
     {
         if (!await ForumExists(storage, forumId, cancellationToken))
         {
-            throw new ForumNotFoundException(forumId);
+            return Errors.General.NotFound(forumId);
         }
+        
+        return UnitResult.Success<Error>();
     }
 
     private static async Task<bool> ForumExists(this IGetAllForumsStorage storage, Guid forumId,
