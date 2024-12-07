@@ -1,0 +1,49 @@
+name: CI Pipeline
+
+# Запуск workflow при каждом push или pull request в ветки main или develop
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Задаем среды выполнения
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Загрузка кода из репозитория
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      # Кэширование NuGet пакетов
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+
+      # Установка .NET SDK
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'  # Укажите версию .NET SDK, которая вам нужна
+
+      # Восстановление зависимостей
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: ./backend
+
+      # Сборка проекта
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+        working-directory: ./backend
+
+      # Запуск тестов
+      - name: Test
+        run: dotnet test --no-build --configuration Release --verbosity minimal
+        working-directory: ./backend

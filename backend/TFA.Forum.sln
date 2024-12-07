@@ -6,6 +6,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Dockerfile = Dockerfile
 		.dockerignore = .dockerignore
 		prometheus.yml = prometheus.yml
+		.github\workflows\github-ci.yml = .github\workflows\github-ci.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{042F623F-5DC1-4CB5-942F-69BC5F0A4CBC}"
