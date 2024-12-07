@@ -33,7 +33,6 @@ public class CreateTopicUseCase(
         if (forumResult.IsFailure)
             return forumResult.Error.ToErrorList();
         
-
         var result = await storage.CreateTopic(command.ForumId, identityProvider.Current.UserId, command.Title, command.Content, cancellationToken);
         return result;
     }

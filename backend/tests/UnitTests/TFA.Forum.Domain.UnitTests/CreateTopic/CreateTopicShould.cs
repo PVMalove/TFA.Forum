@@ -11,6 +11,7 @@ using TFA.Forum.Domain.DTO.Topic;
 using TFA.Forum.Domain.Entities;
 using TFA.Forum.Domain.EntityIds;
 using TFA.Forum.Domain.Exceptions;
+using TFA.Forum.Domain.Shared;
 using TFA.Forum.Domain.ValueObjects;
 using TFA.Forum.Persistence.Storage.Forum;
 using TFA.Forum.Persistence.Storage.Topic;
@@ -93,7 +94,9 @@ public class CreateTopicShould
         intentionIsAllowedSetup.Returns(true);
         getForumsSetup.ReturnsAsync(Array.Empty<ForumGetDto>());
 
-        await sut.Invoking(s => s.Execute(new CreateTopicCommand(forumId, "Some title","Some content"), CancellationToken.None))
-            .Should().ThrowAsync<ForumNotFoundException>();
+        var result = await sut.Execute(new CreateTopicCommand(forumId, "Some title","Some content"), CancellationToken.None);
+
+        result.Error.Should().NotBeNull();
+        result.Error.Should().ContainSingle(e => e.Message == Errors.General.NotFound(forumId).Message);
     }
 }

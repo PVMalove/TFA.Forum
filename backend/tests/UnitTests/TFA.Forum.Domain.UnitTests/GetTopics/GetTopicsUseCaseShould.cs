@@ -10,6 +10,7 @@ using TFA.Forum.Domain.Entities;
 using TFA.Forum.Domain.EntityIds;
 using TFA.Forum.Domain.Exceptions;
 using TFA.Forum.Domain.Models;
+using TFA.Forum.Domain.Shared;
 using TFA.Forum.Domain.ValueObjects;
 using TFA.Forum.Persistence.Storage.Forum;
 using TFA.Forum.Persistence.Storage.Topic;
@@ -49,8 +50,11 @@ public class GetTopicsUseCaseShould
         getForumsSetup.ReturnsAsync(new[] { new ForumGetDto(forumId_1, "Some title", DateTimeOffset.Now) });
 
         var query = new GetTopicsWithPaginationQuery(forumId_2, "created", "desc", 0, 1);
-        await sut.Invoking(s => s.Execute(query, CancellationToken.None))
-            .Should().ThrowAsync<ForumNotFoundException>();
+        
+        var result = await sut.Execute(query, CancellationToken.None);
+
+        result.Error.Should().NotBeNull();
+        result.Error.Should().ContainSingle(e => e.Message == Errors.General.NotFound(forumId_2).Message);
     }
 
     // [Fact]

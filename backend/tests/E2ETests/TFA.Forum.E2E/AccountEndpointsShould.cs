@@ -46,7 +46,7 @@ public class AccountEndpointsShould : IClassFixture<ForumApiApplicationFactory>
         
         var forumTitle = "DDAB3629-0BD9-4842-9C70-310A51694ACC";
         var createForumContent = JsonContent.Create(new { Title = forumTitle });
-        var createForumResponse = await httpClient.PostAsync("api/v1.0/Forum/create", createForumContent);
+        var createForumResponse = await httpClient.PostAsync("api/v1.0/Forums", createForumContent);
 
         createForumResponse.IsSuccessStatusCode.Should().BeTrue();
     }
