@@ -49,9 +49,7 @@ public class SignInUseCaseShould
                 Base64Key = "fOpY0gOMaErVcls0knIXrp6vrCR60I3zlJOLjIoOCmQ="
             });
 
-        sut = new SignInUseCase(
-            validator.Object,
-            storage.Object,
+        sut = new SignInUseCase(storage.Object,
             passwordManager.Object,
             encryptor.Object,
             configuration.Object);
@@ -65,7 +63,7 @@ public class SignInUseCaseShould
 
         findUserSetup.ReturnsAsync(() => null);
 
-        var result = await sut.Execute(command, cancellationToken);
+        var result = await sut.Handle(command, cancellationToken);
 
         result.Error.Should().NotBeNull();
         result.Error.Should().ContainSingle(e => e.Message == Errors.User.InvalidCredentials().Message);
@@ -78,7 +76,7 @@ public class SignInUseCaseShould
         findUserSetup.ReturnsAsync(new ExistsUserDto(userId, [1], [2]));
         comparePasswordsSetup.Returns(false);
 
-        var result = await sut.Execute(new SignInCommand("Test", "qwerty", false), CancellationToken.None);
+        var result = await sut.Handle(new SignInCommand("Test", "qwerty", false), CancellationToken.None);
 
         result.Error.Should().NotBeNull();
         result.Error.Should().ContainSingle(e => e.Message == Errors.User.InvalidCredentials().Message);
@@ -93,7 +91,7 @@ public class SignInUseCaseShould
         comparePasswordsSetup.Returns(true);
         createSessionSetup.ReturnsAsync(sessionId);
 
-        await sut.Execute(new SignInCommand("Test", "qwerty", false), CancellationToken.None);
+        await sut.Handle(new SignInCommand("Test", "qwerty", false), CancellationToken.None);
         storage.Verify(s => s.CreateSession(userId, It.IsAny<DateTimeOffset>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -107,7 +105,7 @@ public class SignInUseCaseShould
         createSessionSetup.ReturnsAsync(sessionId);
         encryptSetup.ReturnsAsync("token");
     
-        var result = await sut.Execute(new SignInCommand("Test", "qwerty", false), CancellationToken.None);
+        var result = await sut.Handle(new SignInCommand("Test", "qwerty", false), CancellationToken.None);
         result.Value.Token.Should().NotBeEmpty();
         result.Value.Identity.UserId.Should().Be(userId);
         result.Value.Identity.SessionId.Should().Be(sessionId);
@@ -123,7 +121,7 @@ public class SignInUseCaseShould
         comparePasswordsSetup.Returns(true);
         createSessionSetup.ReturnsAsync(sessionId);
 
-        await sut.Execute(new SignInCommand("Test", "qwerty", false), CancellationToken.None);
+        await sut.Handle(new SignInCommand("Test", "qwerty", false), CancellationToken.None);
 
         encryptor.Verify(s => s
             .Encrypt(sessionId.ToString(), It.IsAny<byte[]>(), It.IsAny<CancellationToken>()));

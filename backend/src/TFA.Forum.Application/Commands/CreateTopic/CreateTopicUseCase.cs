@@ -12,28 +12,14 @@ using TFA.Forum.Persistence.Storage.Topic;
 
 namespace TFA.Forum.Application.Commands.CreateTopic;
 
-public class CreateTopicUseCase : ICommandHandler<TopicCreateDto, CreateTopicCommand>
+public class CreateTopicUseCase(
+    IValidator<CreateTopicCommand> validator,
+    IIntentionManager intentionManager,
+    IIdentityProvider identityProvider,
+    ICreateTopicStorage storage,
+    IGetAllForumsStorage getForumsStorage)
+    : ICommandHandler<TopicCreateDto, CreateTopicCommand>
 {
-    private readonly IValidator<CreateTopicCommand> validator;
-    private readonly IIntentionManager intentionManager;
-    private readonly IIdentityProvider identityProvider;
-    private readonly ICreateTopicStorage storage;
-    private readonly IGetAllForumsStorage getForumsStorage;
-
-    public CreateTopicUseCase(
-        IValidator<CreateTopicCommand> validator,
-        IIntentionManager intentionManager,
-        IIdentityProvider identityProvider,
-        ICreateTopicStorage storage,
-        IGetAllForumsStorage getForumsStorage)
-    {
-        this.validator = validator;
-        this.intentionManager = intentionManager;
-        this.identityProvider = identityProvider;
-        this.storage = storage;
-        this.getForumsStorage = getForumsStorage;
-    }
-
     public async Task<Result<TopicCreateDto, ErrorList>> Execute(CreateTopicCommand command,
         CancellationToken cancellationToken)
     {

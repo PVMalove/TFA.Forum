@@ -1,24 +1,15 @@
 ﻿using TFA.Forum.Domain.EntityIds;
-using TFA.Forum.Domain.Interfaces;
 using TFA.Forum.Domain.Interfaces.Repository;
 
 namespace TFA.Forum.Persistence.Storage.User;
 
-internal class SignOnStorage : ISignOnStorage
+internal class SignOnStorage(
+    IBaseRepository<Domain.Entities.User> userRepository)
+    : ISignOnStorage
 {
-    private readonly IBaseRepository<Domain.Entities.User> userRepository;
-    private readonly IGuidFactory guidFactory;
-
-    public SignOnStorage(IBaseRepository<Domain.Entities.User> userRepository,
-        IGuidFactory guidFactory)
-    {
-        this.userRepository = userRepository;
-        this.guidFactory = guidFactory;
-    }
-    
     public async Task<Guid> CreateUser(string login, byte[] salt, byte[] hash, CancellationToken cancellationToken)
     {
-        var userIdValue = UserId.NewId(guidFactory);
+        var userIdValue = UserId.NewId();
         
         var user = Domain.Entities.User.Create(userIdValue, login, salt, hash);
 

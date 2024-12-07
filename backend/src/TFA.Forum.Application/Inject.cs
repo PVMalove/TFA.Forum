@@ -9,9 +9,7 @@ using TFA.Forum.Application.Commands.SingOut;
 using TFA.Forum.Application.Extensions;
 using TFA.Forum.Application.Mapping;
 using TFA.Forum.Application.Monitoring;
-using TFA.Forum.Application.Queries.GetAllForums;
-using TFA.Forum.Application.Queries.GetTopics;
-using TFA.Forum.Application.Shared;
+using TFA.Forum.Domain.EntityIds;
 using TFA.Forum.Domain.Interfaces;
 
 namespace TFA.Forum.Application;
@@ -22,6 +20,11 @@ public static class Inject
     {
         services.AddAutoMapper(typeof(ForumMapping));
 
+        services.AddMediatR(c => c
+            .RegisterServicesFromAssembly(typeof(Inject).Assembly)
+            .AddOpenBehavior(typeof(MonitoringPipelineBehavior<,>))
+            .AddOpenBehavior(typeof(ResultValidationPipelineBehavior<,>)));
+        
         services.AddScoped<IIntentionResolver, ForumIntentionResolver>();
         services.AddScoped<IIntentionResolver, TopicIntentionResolver>();
         services.AddScoped<IIntentionResolver, AccountIntentionResolver>();
@@ -32,8 +35,7 @@ public static class Inject
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<ISymmetricDecryptor, AesSymmetric>();
         services.AddScoped<ISymmetricEncryptor, AesSymmetric>();
-        
-        services.AddScoped<IGuidFactory, GuidFactory>();
+
         services.AddScoped<IMomentProvider, MomentProvider>();
 
         services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
@@ -41,7 +43,7 @@ public static class Inject
         services.AddMemoryCache();
         services.AddHandlers();
         
-        services.AddSingleton<DomainMetrics>();
+        services.AddSingleton<ApplicationMetrics>();
         
         return services;
     }

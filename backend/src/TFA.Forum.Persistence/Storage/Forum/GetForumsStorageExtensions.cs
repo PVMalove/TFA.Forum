@@ -3,7 +3,6 @@ using TFA.Forum.Domain.Shared;
 
 namespace TFA.Forum.Persistence.Storage.Forum;
 
-
 public static class GetForumsStorageExtensions
 {
     public static async Task<UnitResult<Error>> ThrowIfForumNotFound(this IGetAllForumsStorage storage, Guid forumId,

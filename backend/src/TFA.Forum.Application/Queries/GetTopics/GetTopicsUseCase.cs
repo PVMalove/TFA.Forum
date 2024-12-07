@@ -11,21 +11,12 @@ using TFA.Forum.Persistence.Storage.Topic;
 
 namespace TFA.Forum.Application.Queries.GetTopics;
 
-
-public class GetTopicsUseCase : IQueryHandler<PagedList<TopicGetDto>, GetTopicsWithPaginationQuery>
+public class GetTopicsUseCase(
+    IValidator<GetTopicsWithPaginationQuery> validator,
+    IGetAllForumsStorage getForumsStorage,
+    IGetTopicsStorage getTopicsStorage)
+    : IQueryHandler<PagedList<TopicGetDto>, GetTopicsWithPaginationQuery>
 {
-    private readonly IValidator<GetTopicsWithPaginationQuery> validator;
-    private readonly IGetAllForumsStorage getForumsStorage;
-    private readonly IGetTopicsStorage getTopicsStorage;
-
-    public GetTopicsUseCase(IValidator<GetTopicsWithPaginationQuery> validator, IGetAllForumsStorage getForumsStorage, 
-        IGetTopicsStorage getTopicsStorage)
-    {
-        this.validator = validator;
-        this.getForumsStorage = getForumsStorage;
-        this.getTopicsStorage = getTopicsStorage;
-    }
-
     public async Task<Result<PagedList<TopicGetDto>, ErrorList>> Execute(GetTopicsWithPaginationQuery query, CancellationToken cancellationToken = default)
     {
         var validationResult = await validator.ValidateAsync(query, cancellationToken);

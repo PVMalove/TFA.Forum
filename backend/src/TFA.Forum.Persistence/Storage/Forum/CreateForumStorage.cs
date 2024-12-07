@@ -8,25 +8,15 @@ using TFA.Forum.Domain.ValueObjects;
 
 namespace TFA.Forum.Persistence.Storage.Forum;
 
-public class CreateForumStorage : ICreateForumStorage
+public class CreateForumStorage(
+    IBaseRepository<Domain.Entities.Forum> forumRepository,
+    IMomentProvider momentProvider,
+    IMemoryCache memoryCache)
+    : ICreateForumStorage
 {
-    private readonly IBaseRepository<Domain.Entities.Forum> forumRepository;
-    private readonly IGuidFactory guidFactory;
-    private readonly IMomentProvider momentProvider;
-    private readonly IMemoryCache memoryCache;
-
-    public CreateForumStorage(IBaseRepository<Domain.Entities.Forum> forumRepository, IGuidFactory guidFactory, 
-        IMomentProvider momentProvider, IMemoryCache memoryCache)
-    {
-        this.forumRepository = forumRepository;
-        this.guidFactory = guidFactory;
-        this.momentProvider = momentProvider;
-        this.memoryCache = memoryCache;
-    }
-
     public async Task<ForumCreateDto> Create(string? title, CancellationToken cancellationToken)
     {
-        var forumId = ForumId.NewId(guidFactory);
+        var forumId = ForumId.NewId();
         var forumTitle = Title.Create(title).Value;
 
         var forum = Domain.Entities.Forum.Create(forumId, forumTitle, momentProvider.Now);

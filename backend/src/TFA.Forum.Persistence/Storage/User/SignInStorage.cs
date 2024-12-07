@@ -2,27 +2,15 @@
 using TFA.Forum.Domain.DTO.User;
 using TFA.Forum.Domain.Entities;
 using TFA.Forum.Domain.EntityIds;
-using TFA.Forum.Domain.Interfaces;
 using TFA.Forum.Domain.Interfaces.Repository;
 
 namespace TFA.Forum.Persistence.Storage.User;
 
-internal class SignInStorage : ISignInStorage
+internal class SignInStorage(
+    IBaseRepository<Domain.Entities.User> userRepository,
+    IBaseRepository<Session> sessionRepository)
+    : ISignInStorage
 {
-    private readonly IBaseRepository<Domain.Entities.User> userRepository;
-    private readonly IBaseRepository<Session> sessionRepository;
-
-    private readonly IGuidFactory guidFactory;
-
-    public SignInStorage(IBaseRepository<Domain.Entities.User> userRepository,
-        IBaseRepository<Session> sessionRepository, 
-        IGuidFactory guidFactory)
-    {
-        this.userRepository = userRepository;
-        this.sessionRepository = sessionRepository;
-        this.guidFactory = guidFactory;
-    }
-
     public async Task<ExistsUserDto?> FindUserByLogin(string login, CancellationToken cancellationToken)
     {
         var result = await userRepository.GetAll()
@@ -35,7 +23,7 @@ internal class SignInStorage : ISignInStorage
     
     public async Task<Guid> CreateSession(Guid userId, DateTimeOffset expirationMoment, CancellationToken cancellationToken)
     {
-        var sessionIdValue = SessionId.NewId(guidFactory);
+        var sessionIdValue = SessionId.NewId();
         var userIdValue = UserId.Create(userId);
 
         var session = Session.Create(sessionIdValue, userIdValue, expirationMoment);

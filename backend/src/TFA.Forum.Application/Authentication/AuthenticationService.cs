@@ -4,21 +4,13 @@ using TFA.Forum.Persistence.Storage.User;
 
 namespace TFA.Forum.Application.Authentication;
 
-public class AuthenticationService : IAuthenticationService
+public class AuthenticationService(
+    ISymmetricDecryptor decryptor,
+    IAuthenticationStorage storage,
+    IOptions<AuthenticationConfiguration> options)
+    : IAuthenticationService
 {
-    private readonly ISymmetricDecryptor decryptor;
-    private readonly IAuthenticationStorage storage;
-    private readonly AuthenticationConfiguration configuration;
-
-    public AuthenticationService(
-        ISymmetricDecryptor decryptor,
-        IAuthenticationStorage storage,
-        IOptions<AuthenticationConfiguration> options)
-    {
-        this.decryptor = decryptor;
-        this.storage = storage;
-        configuration = options.Value;
-    }
+    private readonly AuthenticationConfiguration configuration = options.Value;
 
     public async Task<IIdentity> Authenticate(string authToken, CancellationToken cancellationToken)
     {

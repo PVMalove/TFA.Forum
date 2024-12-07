@@ -2,19 +2,11 @@ using TFA.Forum.Application.Authentication;
 
 namespace TFA.Forum.Application.Authorization;
 
-public class IntentionManager : IIntentionManager
+public class IntentionManager(
+    IEnumerable<IIntentionResolver> resolvers,
+    IIdentityProvider identityProvider)
+    : IIntentionManager
 {
-    private readonly IEnumerable<IIntentionResolver> resolvers;
-    private readonly IIdentityProvider identityProvider;
-
-    public IntentionManager(
-        IEnumerable<IIntentionResolver> resolvers,
-        IIdentityProvider identityProvider)
-    {
-        this.resolvers = resolvers;
-        this.identityProvider = identityProvider;
-    }
-
     public bool IsAllowed<TIntention>(TIntention intention) where TIntention : struct
     {
         var matchingResolver = resolvers.OfType<IIntentionResolver<TIntention>>().FirstOrDefault();

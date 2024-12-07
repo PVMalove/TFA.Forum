@@ -7,23 +7,15 @@ using TFA.Forum.Domain.ValueObjects;
 
 namespace TFA.Forum.Persistence.Storage.Topic;
 
-public class CreateTopicStorage: ICreateTopicStorage
+public class CreateTopicStorage(
+    IBaseRepository<Domain.Entities.Topic> topicRepository,
+    IMomentProvider momentProvider)
+    : ICreateTopicStorage
 {
-    private readonly IBaseRepository<Domain.Entities.Topic> topicRepository;
-    private readonly IGuidFactory guidFactory;
-    private readonly IMomentProvider momentProvider;
-
-    public CreateTopicStorage(IBaseRepository<Domain.Entities.Topic> topicRepository, IGuidFactory guidFactory, IMomentProvider momentProvider)
-    {
-        this.topicRepository = topicRepository;
-        this.guidFactory = guidFactory;
-        this.momentProvider = momentProvider;
-    }
-
     public async Task<TopicCreateDto> CreateTopic(Guid forumId, Guid authorId, string? title,
         string? content, CancellationToken cancellationToken)
     {
-        var topicIdValue = TopicId.NewId(guidFactory);
+        var topicIdValue = TopicId.NewId();
         var forumIdValue = ForumId.Create(forumId);
         var authorIdValue = UserId.Create(authorId);
         var titleValue = Title.Create(title).Value;

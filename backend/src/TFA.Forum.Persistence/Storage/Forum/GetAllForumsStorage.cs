@@ -8,18 +8,11 @@ using TFA.Forum.Domain.Shared;
 
 namespace TFA.Forum.Persistence.Storage.Forum;
 
-public class GetAllForumsStorage : IGetAllForumsStorage
+public class GetAllForumsStorage(
+    IBaseRepository<Domain.Entities.Forum> forumRepository,
+    IMemoryCache memoryCache)
+    : IGetAllForumsStorage
 {
-    private readonly IBaseRepository<Domain.Entities.Forum> forumRepository;
-    private readonly IMemoryCache memoryCache;
-
-    public GetAllForumsStorage(IBaseRepository<Domain.Entities.Forum> forumRepository,
-        IMemoryCache memoryCache)
-    {
-        this.forumRepository = forumRepository;
-        this.memoryCache = memoryCache;
-    }
-
     public async Task<IReadOnlyList<ForumGetDto>?> GetForums(CancellationToken cancellationToken)
     {
         return await memoryCache.GetOrCreateAsync<ForumGetDto[]>(

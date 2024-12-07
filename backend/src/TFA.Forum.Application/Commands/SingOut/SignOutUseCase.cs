@@ -7,21 +7,12 @@ using TFA.Forum.Persistence.Storage.User;
 
 namespace TFA.Forum.Application.Commands.SingOut;
 
-public class SignOutUseCase : ICommandHandler<SignOutCommand>
+public class SignOutUseCase(
+    IIntentionManager intentionManager,
+    IIdentityProvider identityProvider,
+    ISignOutStorage storage)
+    : ICommandHandler<SignOutCommand>
 {
-    private readonly IIntentionManager intentionManager;
-    private readonly IIdentityProvider identityProvider;
-    private readonly ISignOutStorage storage;
-    
-    public SignOutUseCase(IIntentionManager intentionManager,
-        IIdentityProvider identityProvider,
-        ISignOutStorage storage)
-    {
-        this.intentionManager = intentionManager;
-        this.identityProvider = identityProvider;
-        this.storage = storage;
-    }
-
     public async Task<UnitResult<ErrorList>> Execute(SignOutCommand command, CancellationToken cancellationToken)
     {
         intentionManager.ThrowIfForbidden(AccountIntention.SignOut);

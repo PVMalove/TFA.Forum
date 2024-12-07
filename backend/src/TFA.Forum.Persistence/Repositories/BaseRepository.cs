@@ -1,6 +1,5 @@
 ﻿using TFA.Forum.Domain.Interfaces.Repository;
 
-
 namespace TFA.Forum.Persistence.Repositories;
 
 public class BaseRepository<TEntity>(ApplicationDbContext dbContext) : IBaseRepository<TEntity>

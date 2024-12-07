@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.Options;
 using TFA.Forum.Application.Abstractions;
 using TFA.Forum.Application.Authentication;
@@ -9,39 +9,21 @@ using TFA.Forum.Persistence.Storage.User;
 
 namespace TFA.Forum.Application.Commands.SignIn;
 
-public class SignInUseCase : ICommandHandler<SignInResponse, SignInCommand>
+public class SignInUseCase(
+    ISignInStorage storage,
+    IPasswordManager passwordManager,
+    ISymmetricEncryptor encryptor,
+    IOptions<AuthenticationConfiguration> options)
+    : IRequestHandler<SignInCommand, Result<SignInResponse, ErrorList>>
 {
     private readonly TimeSpan defaultSessionLifetime = TimeSpan.FromHours(1);
     private readonly TimeSpan rememberMeSessionLifetime = TimeSpan.FromDays(30);
-    
-    private readonly IValidator<SignInCommand> validator;
-    private readonly ISignInStorage storage;
-    private readonly IPasswordManager passwordManager;
-    private readonly ISymmetricEncryptor encryptor;
-    private readonly AuthenticationConfiguration configuration;
 
-    public SignInUseCase(
-        IValidator<SignInCommand> validator,
-        ISignInStorage storage,
-        IPasswordManager passwordManager,
-        ISymmetricEncryptor encryptor,
-        IOptions<AuthenticationConfiguration> options)
-    {
-        this.validator = validator;
-        this.storage = storage;
-        this.passwordManager = passwordManager;
-        this.encryptor = encryptor;
-        configuration = options.Value;
-    }
+    private readonly AuthenticationConfiguration configuration = options.Value;
 
-    public async Task<Result<SignInResponse, ErrorList>> Execute(
+    public async Task<Result<SignInResponse, ErrorList>> Handle(
         SignInCommand command, CancellationToken cancellationToken)
     {
-        var validateResult = await validator.ValidateAsync(command, cancellationToken);
-
-        if (!validateResult.IsValid)
-            return validateResult.ToList();
-
         var existsUser = await storage.FindUserByLogin(command.Login, cancellationToken);
         if (existsUser is null)
             return Errors.User.InvalidCredentials().ToErrorList();

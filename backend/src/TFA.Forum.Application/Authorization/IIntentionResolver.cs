@@ -2,9 +2,7 @@
 
 namespace TFA.Forum.Application.Authorization;
 
-public interface IIntentionResolver
-{
-}
+public interface IIntentionResolver { }
 
 public interface IIntentionResolver<in TIntention> : IIntentionResolver
 {

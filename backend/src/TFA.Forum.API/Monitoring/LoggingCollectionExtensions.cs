@@ -1,7 +1,7 @@
 ﻿using Serilog;
 using Serilog.Filters;
 
-namespace TFA.Forum.API.Extensions;
+namespace TFA.Forum.API.Monitoring;
 
 internal static class LoggingCollectionExtensions
 {

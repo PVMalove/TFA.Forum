@@ -2,20 +2,18 @@ using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using TFA.Forum.API.Controllers.Forum.Request;
 using TFA.Forum.API.Extensions;
-using TFA.Forum.API.Response;
 using TFA.Forum.Application.Commands.CreateForum;
 using TFA.Forum.Application.Commands.CreateTopic;
 using TFA.Forum.Application.Queries.GetAllForums;
 using TFA.Forum.Application.Queries.GetTopics;
 
-
 namespace TFA.Forum.API.Controllers.Forum;
 
 [ApiVersion("1.0")]
-public class ForumController : ApplicationController
+public class ForumsController : ApplicationController
 {
     [HttpGet]
-    [ProducesResponseType(200, Type = typeof(GetAllForumRequest[]))]
+    [ProducesResponseType(200, Type = typeof(GetSortedForumsRequest[]))]
     public async Task<IActionResult> GetForums(
         [FromQuery] GetSortedForumsRequest request,
         [FromServices] GetAllForumsUseCase useCase,
@@ -25,14 +23,14 @@ public class ForumController : ApplicationController
         if (result.IsFailure)
             return result.Error.ToResponse();
 
-        return Ok(Envelope.Ok(result.Value));
+        return Ok(result.Value);
     }
     
-    [HttpPost("create")]
+    [HttpPost]
     [ProducesResponseType(400)]
     [ProducesResponseType(410)]
     [ProducesResponseType(201, Type = typeof(CreateTopicRequest))]
-    public async Task<ActionResult> CreateForum(
+    public async Task<ActionResult> CreateForums(
         [FromBody] CreateForumRequest request,
         [FromServices] CreateForumUseCase useCase,
         CancellationToken cancellationToken)
@@ -41,7 +39,7 @@ public class ForumController : ApplicationController
         if (result.IsFailure) 
             return result.Error.ToResponse();
 
-        return Ok(Envelope.Ok(result.Value));
+        return Ok(result.Value);
     }
     
     [HttpGet("{forumId:guid}/topics")]
@@ -58,15 +56,15 @@ public class ForumController : ApplicationController
         if (result.IsFailure) 
             return result.Error.ToResponse();
 
-        return Ok(Envelope.Ok(result.Value));
+        return Ok(result.Value);
     }
 
-    [HttpPost("{forumId:guid}/topic")]
+    [HttpPost("{forumId:guid}/topics")]
     [ProducesResponseType(400)]
     [ProducesResponseType(403)]
     [ProducesResponseType(410)]
     [ProducesResponseType(201, Type = typeof(CreateTopicRequest))]
-    public async Task<IActionResult> CreateTopic(
+    public async Task<IActionResult> CreateTopics(
         [FromRoute] Guid forumId,
         [FromBody] CreateTopicRequest request,
         [FromServices] CreateTopicUseCase useCase,
@@ -76,6 +74,6 @@ public class ForumController : ApplicationController
         if (result.IsFailure) 
             return result.Error.ToResponse();
         
-        return Ok(Envelope.Ok(result.Value));
+        return Ok(result.Value);
     }
 }

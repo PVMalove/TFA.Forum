@@ -9,20 +9,12 @@ using TFA.Forum.Persistence.Storage.Forum;
 
 namespace TFA.Forum.Application.Commands.CreateForum;
 
-public class CreateForumUseCase : ICommandHandler<ForumCreateDto, CreateForumCommand>
+public class CreateForumUseCase(
+    IValidator<CreateForumCommand> validator,
+    IIntentionManager intentionManager,
+    ICreateForumStorage storage)
+    : ICommandHandler<ForumCreateDto, CreateForumCommand>
 {
-    readonly IValidator<CreateForumCommand> validator;
-    private readonly IIntentionManager intentionManager;
-    private readonly ICreateForumStorage storage;
-
-    public CreateForumUseCase(IValidator<CreateForumCommand> validator, IIntentionManager intentionManager,
-        ICreateForumStorage storage)
-    {
-        this.validator = validator;
-        this.intentionManager = intentionManager;
-        this.storage = storage;
-    }
-
     public async Task<Result<ForumCreateDto, ErrorList>> Execute(CreateForumCommand command,
         CancellationToken cancellationToken)
     {
