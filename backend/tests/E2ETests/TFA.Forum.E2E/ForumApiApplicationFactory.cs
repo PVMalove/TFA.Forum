@@ -20,6 +20,7 @@ public class ForumApiApplicationFactory : WebApplicationFactory<Program>, IAsync
             {
                 ["ConnectionStrings:DbConnection"] = dbContainer.GetConnectionString(),
                 ["Authentication:Base64Key"] = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32)),
+                ["Serilog:WriteTo:0:Name"] = "Console",
             }!)
             .Build();
         builder.UseConfiguration(configuration);
