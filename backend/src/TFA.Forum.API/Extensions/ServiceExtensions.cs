@@ -21,7 +21,7 @@ public static class ServiceExtensions
         services.AddScoped<IAuthTokenStorage, AuthTokenStorage>();
         services.Configure<AuthenticationConfiguration>(builder.Configuration.GetSection("Authentication").Bind);
         services.AddApiLogging(builder.Configuration, builder.Environment);
-        services.AddApiMetrics();
+        services.AddApiMetrics(builder.Configuration);
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
         
          services.AddApiVersioning()

@@ -24,11 +24,6 @@ public class SignInUseCaseShould
 
     public SignInUseCaseShould()
     {
-        var validator = new Mock<IValidator<SignInCommand>>();
-        validator
-            .Setup(v => v.ValidateAsync(It.IsAny<SignInCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new ValidationResult());
-
         storage = new Mock<ISignInStorage>();
         findUserSetup = storage.Setup(s => s.FindUserByLogin(It.IsAny<string>(), It.IsAny<CancellationToken>()));
         createSessionSetup = storage.Setup(s => s.CreateSession(It.IsAny<Guid>(), It.IsAny<DateTimeOffset>(), It.IsAny<CancellationToken>()));

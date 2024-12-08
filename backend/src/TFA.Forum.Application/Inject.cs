@@ -19,7 +19,8 @@ public static class Inject
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddAutoMapper(typeof(ForumMapping));
-
+        
+        services.AddSingleton<ApplicationMetrics>();
         services.AddMediatR(c => c
             .RegisterServicesFromAssembly(typeof(Inject).Assembly)
             .AddOpenBehavior(typeof(MonitoringPipelineBehavior<,>))
@@ -43,7 +44,7 @@ public static class Inject
         services.AddMemoryCache();
         services.AddHandlers();
         
-        services.AddSingleton<ApplicationMetrics>();
+
         
         return services;
     }

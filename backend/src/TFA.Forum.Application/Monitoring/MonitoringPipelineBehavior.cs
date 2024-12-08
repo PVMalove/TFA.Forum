@@ -17,8 +17,8 @@ internal class MonitoringPipelineBehavior<TRequest, TResponse>(
         CancellationToken cancellationToken)
     {
         if (request is not IMonitoredRequest monitoredRequest) return await next.Invoke();
-
-        using var activity = ApplicationMetrics.ActivitySource.StartActivity("use.case", ActivityKind.Internal, default(ActivityContext));
+        var parentContext = Activity.Current?.Context ?? default;
+        using var activity = ApplicationMetrics.ActivitySource.StartActivity("usecase", ActivityKind.Internal, parentContext);
         activity?.AddTag("tfa.command", request.GetType().Name);
         
         try
@@ -30,13 +30,13 @@ internal class MonitoringPipelineBehavior<TRequest, TResponse>(
                 if (resultObject.IsFailure && resultObject is IError<ErrorList> resultWithError)
                 {
                     monitoredRequest.MonitorFailure(metrics);
-                    activity?.AddTag("error", true);
+                    activity?.AddTag("Command error", true);
                     logger.LogWarning("Command handled with failure {Command} - {Error}", request, resultWithError.Error);
                 }
                 else
                 {
                     monitoredRequest.MonitorSuccess(metrics);
-                    activity?.AddTag("error", false);
+                    activity?.AddTag("Command error", false);
                     logger.LogInformation("Command successfully handled {Command}", request);
                 }
             }
@@ -47,8 +47,7 @@ internal class MonitoringPipelineBehavior<TRequest, TResponse>(
         {
             logger.LogError(e, "Unhandled error caught while handling command {Command}", request);
             monitoredRequest.MonitorFailure(metrics);
-            activity?.AddTag("error", true);
-
+            activity?.AddTag("Exception error", true);
             throw;
         }
     }
